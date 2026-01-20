@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Copy, Check, RefreshCw, Zap, Flame, MessageSquare, HandHeart, HeartHandshake, Shield, Trophy, Smile } from "lucide-react"
@@ -41,19 +42,41 @@ const voices = [
   { id: 'playful', label: 'Playful', icon: Smile, color: 'bg-rose-500 hover:bg-rose-600' },
 ]
 
-export default function DashboardPage() {
+// Demo messages for screenshot/preview mode
+const demoMessages: Record<string, string> = {
+  quick: "Hey beautiful, just thinking about you. Hope your day is as amazing as you are. ❤️",
+  flirty: "Is it hot in here, or is it just you? Can't stop thinking about that smile of yours. 😏",
+  deep: "Sarah, every day with you feels like a gift I never knew I needed. You've made me a better man.",
+  grateful: "Thank you for being my rock, my best friend, and the love of my life. I don't say it enough.",
+  sorry: "I know I messed up. You deserve better, and I'm committed to being that person for you.",
+  supportive: "Whatever you're facing today, remember - I believe in you completely. You've got this.",
+  proud: "Watching you crush it every day inspires me. I'm so proud to be your husband.",
+  playful: "Hey wifey! If loving you is wrong, I don't want to be right. 😄 Have an awesome day!"
+}
+
+function DashboardContent() {
+  const searchParams = useSearchParams()
+  const isDemo = searchParams.get('demo') === 'true'
+
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [message, setMessage] = useState<Message | null>(null)
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null)
+  const [selectedVoice, setSelectedVoice] = useState<string | null>(isDemo ? 'flirty' : null)
   const [copied, setCopied] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!isDemo)
   const [messageLoading, setMessageLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Demo mode - skip auth and show sample data
+    if (isDemo) {
+      setSubscriber({ id: 'demo', email: 'demo@example.com', wife_name: 'Sarah', frequency: 'daily' })
+      setMessage({ id: 1, voice: 'flirty', content: demoMessages['flirty'], wifeName: 'Sarah' })
+      setLoading(false)
+      return
+    }
     // Auth is now cookie-based - just call the API and it will validate
     loadSubscriber()
-  }, [])
+  }, [isDemo])
 
   const loadSubscriber = async () => {
     try {
@@ -79,6 +102,14 @@ export default function DashboardPage() {
     setMessageLoading(true)
     setSelectedVoice(voice)
     setCopied(false)
+
+    // Demo mode - use local demo messages
+    if (isDemo) {
+      await new Promise(r => setTimeout(r, 300)) // Simulate loading
+      setMessage({ id: 1, voice, content: demoMessages[voice] || demoMessages['quick'], wifeName: subscriber.wife_name })
+      setMessageLoading(false)
+      return
+    }
 
     try {
       const res = await fetch(`${API_URL}/messages/random?theme=${voice}&name=${encodeURIComponent(subscriber.wife_name)}`)
@@ -228,5 +259,19 @@ export default function DashboardPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="animate-pulse">
+          <Heart className="h-12 w-12 text-rose-400" />
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }

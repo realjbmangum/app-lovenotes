@@ -282,16 +282,43 @@ wrangler deploy
 
 ## Screenshots
 
-*Screenshots coming soon*
-
 ### Landing Page
-Beautiful gradient landing page with signup form, testimonials, pricing, and FAQ.
+Beautiful gradient landing page with hero section, phone mockup, and call-to-action.
+
+![Landing Page Hero](screenshots/01-landing-hero.png)
+
+### How It Works
+Three-step process explained with clean iconography.
+
+![How It Works](screenshots/02-how-it-works.png)
+
+### Pricing
+Simple, honest pricing card with feature list.
+
+![Pricing](screenshots/03-pricing.png)
+
+### Signup Form
+Clean form with validation for email, phone, wife's name, and preferences.
+
+![Signup Form](screenshots/04-signup-form.png)
+
+### Success Page
+Confirmation page after signup with next steps and personalized messaging.
+
+![Success Page](screenshots/06-success.png)
 
 ### Dashboard
 Dark-themed dashboard with 8 colorful voice buttons. Tap a vibe, get a message, copy and send.
 
-### Success Page
-Clean confirmation page after signup with next steps.
+![Dashboard](screenshots/05-dashboard.png)
+
+### Mobile Views
+Fully responsive design that works beautifully on mobile devices.
+
+<p float="left">
+  <img src="screenshots/07-mobile-landing.png" width="300" alt="Mobile Landing" />
+  <img src="screenshots/08-mobile-dashboard.png" width="300" alt="Mobile Dashboard" />
+</p>
 
 ---
 

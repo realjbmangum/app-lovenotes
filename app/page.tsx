@@ -34,7 +34,7 @@ export default function LandingPage() {
     email: "",
     phoneNumber: "",
     wifeName: "",
-    contentTheme: "romantic",
+    contentTheme: "random",
     frequency: "daily",
     anniversaryDate: "",
   })
@@ -685,6 +685,7 @@ export default function LandingPage() {
                         <SelectValue placeholder="Choose style" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="random">Random (mix it up daily)</SelectItem>
                         <SelectItem value="romantic">Romantic</SelectItem>
                         <SelectItem value="funny">Funny</SelectItem>
                         <SelectItem value="appreciative">Appreciative</SelectItem>

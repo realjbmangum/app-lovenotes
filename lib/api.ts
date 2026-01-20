@@ -1,7 +1,13 @@
 // API client for LoveNotes backend (Cloudflare Worker)
 
-// Use Worker URL in development, relative path in production
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787/api';
+// Production worker URL - update this after deploying worker
+const PRODUCTION_API_URL = 'https://lovenotes-api.realjbmangum.workers.dev/api';
+
+// Use env var if set, otherwise detect environment
+const API_URL = process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? PRODUCTION_API_URL
+    : 'http://localhost:8787/api');
 
 export interface SignupData {
   email: string;

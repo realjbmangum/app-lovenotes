@@ -21,7 +21,13 @@ interface Subscriber {
   frequency: string
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787/api'
+// Production worker URL - update this after deploying worker
+const PRODUCTION_API_URL = 'https://lovenotes-api.realjbmangum.workers.dev/api';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? PRODUCTION_API_URL
+    : 'http://localhost:8787/api')
 
 // Fetch wrapper that includes credentials for cookie-based auth
 const authFetch = (url: string, options: RequestInit = {}) => {

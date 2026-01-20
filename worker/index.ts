@@ -360,6 +360,12 @@ async function handleNextMessage(subscriberId: string, env: Env): Promise<Respon
     return jsonResponse({ error: 'Subscriber not found' }, 404, env);
   }
 
+  // If theme is "random", pick a random theme
+  let messageTheme = subscriber.theme as string;
+  if (messageTheme === 'random') {
+    messageTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+  }
+
   // Get next message that hasn't been sent to this subscriber
   const result = await env.DB.prepare(`
     SELECT m.id, m.theme, m.occasion, m.content
@@ -371,7 +377,7 @@ async function handleNextMessage(subscriberId: string, env: Env): Promise<Respon
       )
     ORDER BY m.id
     LIMIT 1
-  `).bind(subscriber.theme, subscriberId).first();
+  `).bind(messageTheme, subscriberId).first();
 
   if (!result) {
     // All messages sent, reset and start over
@@ -379,14 +385,14 @@ async function handleNextMessage(subscriberId: string, env: Env): Promise<Respon
       'DELETE FROM subscriber_message_history WHERE subscriber_id = ?'
     ).bind(subscriberId).run();
 
-    // Get first message
+    // Get first message (use the selected theme, which may be randomized)
     const firstResult = await env.DB.prepare(`
       SELECT id, theme, occasion, content
       FROM messages
       WHERE theme = ? AND occasion IS NULL
       ORDER BY id
       LIMIT 1
-    `).bind(subscriber.theme).first();
+    `).bind(messageTheme).first();
 
     if (!firstResult) {
       return jsonResponse({ error: 'No messages found' }, 404, env);

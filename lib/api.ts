@@ -1,7 +1,7 @@
 // API client for LoveNotes backend (Cloudflare Worker)
 
-// Production worker URL - update this after deploying worker
-const PRODUCTION_API_URL = 'https://lovenotes-api.realjbmangum.workers.dev/api';
+// Production worker URL
+const PRODUCTION_API_URL = 'https://lovenotes-api.bmangum1.workers.dev/api';
 
 // Use env var if set, otherwise detect environment
 const API_URL = process.env.NEXT_PUBLIC_API_URL ||

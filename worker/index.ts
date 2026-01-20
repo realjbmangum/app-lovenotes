@@ -121,11 +121,23 @@ async function verifyJWT(token: string, secret: string): Promise<JWTPayload | nu
   }
 }
 
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://lovenotes.pages.dev',
+  'https://app-lovenotes.pages.dev',
+  'https://app-lovenotes-nextjs.pages.dev',
+  'https://lovenotes.app',
+];
+
+// Store current request origin for CORS (set per-request)
+let currentRequestOrigin = '';
+
 function getCORSHeaders(env: Env): Record<string, string> {
-  // Use specific origin in production, allow localhost in development
-  const origin = env.ENVIRONMENT === 'production'
-    ? env.ALLOWED_ORIGIN || 'https://lovenotes.app'
-    : 'http://localhost:3000';
+  // Check if current request origin is allowed
+  const origin = ALLOWED_ORIGINS.includes(currentRequestOrigin)
+    ? currentRequestOrigin
+    : (env.ALLOWED_ORIGIN || ALLOWED_ORIGINS[0]);
 
   return {
     'Access-Control-Allow-Origin': origin,
@@ -180,6 +192,9 @@ export default {
   // HTTP request handler
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    // Set current request origin for CORS
+    currentRequestOrigin = request.headers.get('Origin') || '';
     const corsHeaders = getCORSHeaders(env);
 
     // Handle CORS preflight

@@ -4,12 +4,12 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Copy, Check, RefreshCw, Zap, Flame, MessageSquare, HandHeart, HeartHandshake, Shield, Trophy, Smile } from "lucide-react"
+import { Heart, Copy, Check, RefreshCw, Sparkles, Smile, HandHeart, Lightbulb } from "lucide-react"
 import Link from "next/link"
 
 interface Message {
   id: number
-  voice: string
+  theme: string
   content: string
   wifeName: string
 }
@@ -31,27 +31,20 @@ const authFetch = (url: string, options: RequestInit = {}) => {
   })
 }
 
-const voices = [
-  { id: 'quick', label: 'Quick', icon: Zap, color: 'bg-blue-500 hover:bg-blue-600' },
-  { id: 'flirty', label: 'Flirty', icon: Flame, color: 'bg-pink-500 hover:bg-pink-600' },
-  { id: 'deep', label: 'Deep', icon: MessageSquare, color: 'bg-purple-500 hover:bg-purple-600' },
-  { id: 'grateful', label: 'Grateful', icon: HandHeart, color: 'bg-green-500 hover:bg-green-600' },
-  { id: 'sorry', label: 'Sorry', icon: HeartHandshake, color: 'bg-amber-500 hover:bg-amber-600' },
-  { id: 'supportive', label: 'Support', icon: Shield, color: 'bg-teal-500 hover:bg-teal-600' },
-  { id: 'proud', label: 'Proud', icon: Trophy, color: 'bg-orange-500 hover:bg-orange-600' },
-  { id: 'playful', label: 'Playful', icon: Smile, color: 'bg-rose-500 hover:bg-rose-600' },
+// Themes match database: romantic (850), funny (400), appreciative (410), encouraging (400)
+const themes = [
+  { id: 'romantic', label: 'Romantic', icon: Heart, color: 'bg-rose-500 hover:bg-rose-600' },
+  { id: 'funny', label: 'Funny', icon: Smile, color: 'bg-amber-500 hover:bg-amber-600' },
+  { id: 'appreciative', label: 'Grateful', icon: HandHeart, color: 'bg-green-500 hover:bg-green-600' },
+  { id: 'encouraging', label: 'Uplifting', icon: Lightbulb, color: 'bg-purple-500 hover:bg-purple-600' },
 ]
 
-// Demo messages for screenshot/preview mode
+// Demo messages for screenshot/preview mode (match database themes)
 const demoMessages: Record<string, string> = {
-  quick: "Hey beautiful, just thinking about you. Hope your day is as amazing as you are. ❤️",
-  flirty: "Is it hot in here, or is it just you? Can't stop thinking about that smile of yours. 😏",
-  deep: "Sarah, every day with you feels like a gift I never knew I needed. You've made me a better man.",
-  grateful: "Thank you for being my rock, my best friend, and the love of my life. I don't say it enough.",
-  sorry: "I know I messed up. You deserve better, and I'm committed to being that person for you.",
-  supportive: "Whatever you're facing today, remember - I believe in you completely. You've got this.",
-  proud: "Watching you crush it every day inspires me. I'm so proud to be your husband.",
-  playful: "Hey wifey! If loving you is wrong, I don't want to be right. 😄 Have an awesome day!"
+  romantic: "Good morning beautiful ❤️ Just wanted you to know that waking up thinking of you makes every day perfect. Have an amazing day, my love!",
+  funny: "Hey gorgeous! 😄 I just realized I'm married to someone way out of my league... and I'm totally okay with that! Hope your day is as awesome as you are!",
+  appreciative: "Thank you for being the incredible woman you are 💕 Your strength, kindness, and love make our home a paradise. I'm so grateful for you!",
+  encouraging: "You've got this, superwoman! 💪 Whatever today brings, remember that I believe in you completely. You're stronger than you know! ✨",
 }
 
 function DashboardContent() {
@@ -60,7 +53,7 @@ function DashboardContent() {
 
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [message, setMessage] = useState<Message | null>(null)
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(isDemo ? 'flirty' : null)
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(isDemo ? 'romantic' : null)
   const [copied, setCopied] = useState(false)
   const [loading, setLoading] = useState(!isDemo)
   const [messageLoading, setMessageLoading] = useState(false)
@@ -70,7 +63,7 @@ function DashboardContent() {
     // Demo mode - skip auth and show sample data
     if (isDemo) {
       setSubscriber({ id: 'demo', email: 'demo@example.com', wife_name: 'Sarah', frequency: 'daily' })
-      setMessage({ id: 1, voice: 'flirty', content: demoMessages['flirty'], wifeName: 'Sarah' })
+      setMessage({ id: 1, theme: 'romantic', content: demoMessages['romantic'], wifeName: 'Sarah' })
       setLoading(false)
       return
     }
@@ -96,26 +89,26 @@ function DashboardContent() {
     }
   }
 
-  const loadMessage = async (voice: string) => {
+  const loadMessage = async (theme: string) => {
     if (!subscriber) return
 
     setMessageLoading(true)
-    setSelectedVoice(voice)
+    setSelectedTheme(theme)
     setCopied(false)
 
     // Demo mode - use local demo messages
     if (isDemo) {
       await new Promise(r => setTimeout(r, 300)) // Simulate loading
-      setMessage({ id: 1, voice, content: demoMessages[voice] || demoMessages['quick'], wifeName: subscriber.wife_name })
+      setMessage({ id: 1, theme, content: demoMessages[theme] || demoMessages['romantic'], wifeName: subscriber.wife_name })
       setMessageLoading(false)
       return
     }
 
     try {
-      const res = await fetch(`${API_URL}/messages/random?theme=${voice}&name=${encodeURIComponent(subscriber.wife_name)}`)
+      const res = await fetch(`${API_URL}/messages/random?theme=${theme}&name=${encodeURIComponent(subscriber.wife_name)}`)
       if (!res.ok) throw new Error('Failed to load message')
       const data = await res.json()
-      setMessage({ ...data, voice, wifeName: subscriber.wife_name })
+      setMessage({ ...data, theme, wifeName: subscriber.wife_name })
     } catch (err) {
       setError('Failed to load message. Please try again.')
     } finally {
@@ -132,8 +125,8 @@ function DashboardContent() {
   }
 
   const handleRefresh = () => {
-    if (selectedVoice) {
-      loadMessage(selectedVoice)
+    if (selectedTheme) {
+      loadMessage(selectedTheme)
     }
   }
 
@@ -186,31 +179,31 @@ function DashboardContent() {
         {/* Title */}
         <div className="text-center mb-8">
           <p className="text-slate-400">
-            Pick a vibe, get a message for <span className="text-rose-400 font-medium">{subscriber.wife_name}</span>
+            Pick a style, get a message for <span className="text-rose-400 font-medium">{subscriber.wife_name}</span>
           </p>
         </div>
 
-        {/* Voice Selector Grid */}
+        {/* Theme Selector Grid */}
         <div className="grid grid-cols-4 gap-2 mb-6">
-          {voices.map((voice) => {
-            const Icon = voice.icon
-            const isSelected = selectedVoice === voice.id
+          {themes.map((theme) => {
+            const Icon = theme.icon
+            const isSelected = selectedTheme === theme.id
             return (
               <button
-                key={voice.id}
-                onClick={() => loadMessage(voice.id)}
+                key={theme.id}
+                onClick={() => loadMessage(theme.id)}
                 disabled={messageLoading}
                 className={`
                   flex flex-col items-center justify-center p-3 rounded-xl transition-all
                   ${isSelected
-                    ? `${voice.color} text-white ring-2 ring-white ring-offset-2 ring-offset-slate-900`
+                    ? `${theme.color} text-white ring-2 ring-white ring-offset-2 ring-offset-slate-900`
                     : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                   }
                   ${messageLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                 `}
               >
                 <Icon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">{voice.label}</span>
+                <span className="text-xs font-medium">{theme.label}</span>
               </button>
             )
           })}
@@ -258,7 +251,7 @@ function DashboardContent() {
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-slate-400">Tap a vibe above to get a message</p>
+                <p className="text-slate-400">Tap a style above to get a message</p>
               </div>
             )}
           </CardContent>

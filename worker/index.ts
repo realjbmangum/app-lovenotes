@@ -1,6 +1,7 @@
 /**
  * LoveNotes API Worker
  * Handles signup, message retrieval, and subscription management
+ * Plus scheduled daily message generation
  */
 
 export interface Env {
@@ -8,7 +9,13 @@ export interface Env {
   ENVIRONMENT: string;
   JWT_SECRET: string;
   ALLOWED_ORIGIN: string;
+  TWILIO_ACCOUNT_SID?: string;
+  TWILIO_AUTH_TOKEN?: string;
+  TWILIO_PHONE_NUMBER?: string;
 }
+
+// Available themes for random selection
+const THEMES = ['romantic', 'funny', 'appreciative', 'encouraging'];
 
 interface SignupRequest {
   email: string;
@@ -24,6 +31,17 @@ interface JWTPayload {
   email: string;
   exp: number;
   iat: number;
+}
+
+// Cloudflare Worker types
+interface ScheduledEvent {
+  cron: string;
+  scheduledTime: number;
+}
+
+interface ExecutionContext {
+  waitUntil(promise: Promise<unknown>): void;
+  passThroughOnException(): void;
 }
 
 // JWT Helper Functions using Web Crypto API
@@ -159,6 +177,7 @@ function getAuthToken(request: Request): string | null {
 }
 
 export default {
+  // HTTP request handler
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const corsHeaders = getCORSHeaders(env);
@@ -216,6 +235,11 @@ export default {
       console.error('API Error:', error);
       return jsonResponse({ error: 'Internal server error' }, 500, env);
     }
+  },
+
+  // Scheduled handler - runs daily at 8am to send messages
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(handleScheduled(env));
   },
 };
 
@@ -448,4 +472,179 @@ async function handleCreateTestUser(request: Request, env: Env): Promise<Respons
     },
     token, // Return token for testing
   }, 200, env);
+}
+
+/**
+ * Scheduled handler - runs daily to generate messages for all active subscribers
+ */
+async function handleScheduled(env: Env): Promise<void> {
+  console.log('Running scheduled message generation...');
+
+  // Get today's date in MM-DD format for anniversary checking
+  const today = new Date();
+  const todayMMDD = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+  // Get all active subscribers who should receive messages today
+  const subscribers = await env.DB.prepare(`
+    SELECT id, email, phone, wife_name, theme, frequency, anniversary_date, wife_birthday
+    FROM subscribers
+    WHERE status IN ('active', 'trial')
+  `).all();
+
+  if (!subscribers.results || subscribers.results.length === 0) {
+    console.log('No active subscribers found');
+    return;
+  }
+
+  for (const subscriber of subscribers.results) {
+    try {
+      // Check frequency - skip if not due
+      if (subscriber.frequency === 'weekly') {
+        // Send on Sundays only
+        if (today.getDay() !== 0) continue;
+      } else if (subscriber.frequency === 'bi-weekly') {
+        // Send on 1st and 15th of month
+        if (today.getDate() !== 1 && today.getDate() !== 15) continue;
+      }
+
+      // Determine if today is a special occasion
+      let occasionType: string | null = null;
+      let messageTheme = subscriber.theme as string;
+
+      // Check anniversary (format: YYYY-MM-DD)
+      if (subscriber.anniversary_date) {
+        const annivMMDD = (subscriber.anniversary_date as string).substring(5);
+        if (annivMMDD === todayMMDD) {
+          occasionType = 'anniversary';
+        }
+      }
+
+      // Check birthday (format: YYYY-MM-DD)
+      if (subscriber.wife_birthday) {
+        const bdayMMDD = (subscriber.wife_birthday as string).substring(5);
+        if (bdayMMDD === todayMMDD) {
+          occasionType = 'birthday';
+        }
+      }
+
+      // Get message - either occasion-specific or random theme
+      let message;
+      if (occasionType) {
+        // Get occasion-specific message
+        message = await env.DB.prepare(`
+          SELECT id, theme, occasion, content
+          FROM messages
+          WHERE occasion = ?
+          ORDER BY RANDOM()
+          LIMIT 1
+        `).bind(occasionType).first();
+      }
+
+      // If no occasion message or not a special day, get a random-themed message
+      if (!message) {
+        // Pick random theme for variety (user can always get their preferred in dashboard)
+        const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+        messageTheme = randomTheme;
+
+        message = await env.DB.prepare(`
+          SELECT m.id, m.theme, m.occasion, m.content
+          FROM messages m
+          WHERE m.theme = ?
+            AND m.occasion IS NULL
+            AND m.id NOT IN (
+              SELECT message_id FROM subscriber_message_history WHERE subscriber_id = ?
+            )
+          ORDER BY RANDOM()
+          LIMIT 1
+        `).bind(randomTheme, subscriber.id).first();
+
+        // If all messages seen, reset history and get one
+        if (!message) {
+          await env.DB.prepare(
+            'DELETE FROM subscriber_message_history WHERE subscriber_id = ?'
+          ).bind(subscriber.id).run();
+
+          message = await env.DB.prepare(`
+            SELECT id, theme, occasion, content
+            FROM messages
+            WHERE theme = ? AND occasion IS NULL
+            ORDER BY RANDOM()
+            LIMIT 1
+          `).bind(randomTheme).first();
+        }
+      }
+
+      if (!message) {
+        console.log(`No message found for subscriber ${subscriber.id}`);
+        continue;
+      }
+
+      // Replace placeholder with wife's name
+      const content = (message.content as string).replace(/{wife_name}/g, subscriber.wife_name as string);
+
+      // Record the message in send_log
+      const sendId = generateId();
+      await env.DB.prepare(`
+        INSERT INTO send_log (id, subscriber_id, message_id, status)
+        VALUES (?, ?, ?, 'pending')
+      `).bind(sendId, subscriber.id, message.id).run();
+
+      // Record in history to prevent repeats
+      await env.DB.prepare(`
+        INSERT OR IGNORE INTO subscriber_message_history (subscriber_id, message_id)
+        VALUES (?, ?)
+      `).bind(subscriber.id, message.id).run();
+
+      // Send SMS via Twilio if configured
+      if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_PHONE_NUMBER) {
+        try {
+          const twilioResponse = await fetch(
+            `https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Basic ' + btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`),
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: new URLSearchParams({
+                To: `+1${subscriber.phone}`,
+                From: env.TWILIO_PHONE_NUMBER,
+                Body: `💕 Today's LoveNote for ${subscriber.wife_name}:\n\n${content}\n\n(Reply STOP to unsubscribe)`,
+              }).toString(),
+            }
+          );
+
+          const twilioResult = await twilioResponse.json() as { sid?: string; error_message?: string };
+
+          if (twilioResponse.ok && twilioResult.sid) {
+            await env.DB.prepare(`
+              UPDATE send_log SET status = 'sent', twilio_sid = ? WHERE id = ?
+            `).bind(twilioResult.sid, sendId).run();
+            console.log(`Sent message to subscriber ${subscriber.id}`);
+          } else {
+            await env.DB.prepare(`
+              UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
+            `).bind(twilioResult.error_message || 'Unknown error', sendId).run();
+            console.error(`Failed to send to ${subscriber.id}:`, twilioResult.error_message);
+          }
+        } catch (twilioError) {
+          await env.DB.prepare(`
+            UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
+          `).bind(String(twilioError), sendId).run();
+          console.error(`Twilio error for ${subscriber.id}:`, twilioError);
+        }
+      } else {
+        // Twilio not configured - mark as ready for manual send
+        await env.DB.prepare(`
+          UPDATE send_log SET status = 'ready' WHERE id = ?
+        `).bind(sendId).run();
+        console.log(`Message queued for subscriber ${subscriber.id} (Twilio not configured)`);
+      }
+
+    } catch (err) {
+      console.error(`Error processing subscriber ${subscriber.id}:`, err);
+    }
+  }
+
+  console.log('Scheduled message generation complete');
 }

@@ -18,8 +18,20 @@ ALLOWED_ORIGIN = "http://localhost:3000"
 [dev]
 port = 8787
 
+# Scheduled trigger - runs daily at 8am ET (13:00 UTC)
+[triggers]
+crons = ["0 13 * * *"]
+
 # Production environment
 [env.production]
 vars = { ENVIRONMENT = "production", ALLOWED_ORIGIN = "https://lovenotes.app" }
-# Remember to set JWT_SECRET as a secret in production:
+
+# Production also needs the cron trigger
+[env.production.triggers]
+crons = ["0 13 * * *"]
+
+# Remember to set these secrets in production:
 # wrangler secret put JWT_SECRET --env production
+# wrangler secret put TWILIO_ACCOUNT_SID --env production
+# wrangler secret put TWILIO_AUTH_TOKEN --env production
+# wrangler secret put TWILIO_PHONE_NUMBER --env production

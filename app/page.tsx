@@ -137,19 +137,19 @@ export default function LandingPage() {
           <nav className="hidden md:flex items-center space-x-6">
             <button
               onClick={() => scrollToSection("how-it-works")}
-              className="text-gray-600 hover:text-rose-500 transition-colors"
+              className="text-gray-600 hover:text-rose-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 rounded-md px-2 py-1"
             >
               How It Works
             </button>
             <button
               onClick={() => scrollToSection("pricing")}
-              className="text-gray-600 hover:text-rose-500 transition-colors"
+              className="text-gray-600 hover:text-rose-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 rounded-md px-2 py-1"
             >
               Pricing
             </button>
             <button
               onClick={() => scrollToSection("testimonials")}
-              className="text-gray-600 hover:text-rose-500 transition-colors"
+              className="text-gray-600 hover:text-rose-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 rounded-md px-2 py-1"
             >
               Reviews
             </button>
@@ -162,7 +162,7 @@ export default function LandingPage() {
           </nav>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-600 hover:text-rose-500 transition-colors"
+            className="md:hidden p-2 text-gray-600 hover:text-rose-500 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 rounded-md"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -173,19 +173,19 @@ export default function LandingPage() {
           <div className="md:hidden border-t border-rose-100 py-4 px-4 space-y-3">
             <button
               onClick={() => { scrollToSection("how-it-works"); setMobileMenuOpen(false); }}
-              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2"
+              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2 px-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
             >
               How It Works
             </button>
             <button
               onClick={() => { scrollToSection("pricing"); setMobileMenuOpen(false); }}
-              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2"
+              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2 px-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
             >
               Pricing
             </button>
             <button
               onClick={() => { scrollToSection("testimonials"); setMobileMenuOpen(false); }}
-              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2"
+              className="block w-full text-left text-gray-600 hover:text-rose-500 transition-colors py-2 px-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
             >
               Reviews
             </button>
@@ -384,7 +384,7 @@ export default function LandingPage() {
 
             <Card className="border-rose-100 hover:shadow-lg transition-shadow">
               <CardHeader>
-                <Sparkles className="h-8 w-8 text-purple-500 mb-2" />
+                <Sparkles className="h-8 w-8 text-rose-500 mb-2" />
                 <CardTitle className="text-lg">Personalized Content</CardTitle>
               </CardHeader>
               <CardContent>
@@ -408,7 +408,7 @@ export default function LandingPage() {
 
             <Card className="border-rose-100 hover:shadow-lg transition-shadow">
               <CardHeader>
-                <MessageCircle className="h-8 w-8 text-purple-500 mb-2" />
+                <MessageCircle className="h-8 w-8 text-rose-500 mb-2" />
                 <CardTitle className="text-lg">Multiple Themes</CardTitle>
               </CardHeader>
               <CardContent>
@@ -681,7 +681,7 @@ export default function LandingPage() {
                       value={formData.contentTheme}
                       onValueChange={(value) => setFormData({ ...formData, contentTheme: value })}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Choose style" />
                       </SelectTrigger>
                       <SelectContent>
@@ -698,7 +698,7 @@ export default function LandingPage() {
                       value={formData.frequency}
                       onValueChange={(value) => setFormData({ ...formData, frequency: value })}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="How often?" />
                       </SelectTrigger>
                       <SelectContent>
@@ -748,14 +748,14 @@ export default function LandingPage() {
                 <Heart className="h-8 w-8 text-rose-500" />
                 <span className="text-2xl font-bold">LoveNotes</span>
               </div>
-              <p className="text-gray-400">
+              <p className="text-gray-300">
                 Helping husbands stay connected with their wives through personalized daily messages.
               </p>
             </div>
 
             <div className="space-y-4">
               <h4 className="font-semibold">Product</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-300">
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
                     How It Works
@@ -781,7 +781,7 @@ export default function LandingPage() {
 
             <div className="space-y-4">
               <h4 className="font-semibold">Support</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-300">
                 <li>
                   <a href="#" className="hover:text-white transition-colors">
                     Help Center
@@ -810,27 +810,27 @@ export default function LandingPage() {
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Shield className="h-5 w-5 text-green-500" />
-                  <span className="text-sm text-gray-400">SSL Encrypted</span>
+                  <span className="text-sm text-gray-300">SSL Encrypted</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CreditCard className="h-5 w-5 text-green-500" />
-                  <span className="text-sm text-gray-400">Secure Payments</span>
+                  <span className="text-sm text-gray-300">Secure Payments</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Heart className="h-5 w-5 text-green-500" />
-                  <span className="text-sm text-gray-400">30-Day Guarantee</span>
+                  <span className="text-sm text-gray-300">30-Day Guarantee</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">© 2024 LoveNotes. All rights reserved.</p>
+            <p className="text-gray-300 text-sm">© {new Date().getFullYear()} LoveNotes. All rights reserved.</p>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
-              <a href="mailto:support@lovenotes.com" className="text-gray-400 hover:text-white transition-colors">
+              <a href="mailto:support@lovenotes.com" className="text-gray-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md">
                 <Mail className="h-5 w-5" />
               </a>
-              <a href="tel:+1234567890" className="text-gray-400 hover:text-white transition-colors">
+              <a href="tel:+1234567890" className="text-gray-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md">
                 <Phone className="h-5 w-5" />
               </a>
             </div>

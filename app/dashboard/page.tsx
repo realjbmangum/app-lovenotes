@@ -166,14 +166,25 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-4 py-8">
-      <div className="container mx-auto max-w-2xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-4 py-4">
+      {/* Navigation Header */}
+      <header className="container mx-auto max-w-2xl mb-6">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md px-2 py-1">
+            <Heart className="h-5 w-5 text-rose-500" />
+            <span className="text-sm font-medium">Home</span>
+          </Link>
+          <div className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-rose-500" />
-            <h1 className="text-2xl font-bold text-white">LoveNotes</h1>
+            <span className="text-xl font-bold text-white">LoveNotes</span>
           </div>
+          <div className="w-16" /> {/* Spacer for centering */}
+        </div>
+      </header>
+
+      <div className="container mx-auto max-w-2xl">
+        {/* Title */}
+        <div className="text-center mb-8">
           <p className="text-slate-400">
             Pick a vibe, get a message for <span className="text-rose-400 font-medium">{subscriber.wife_name}</span>
           </p>

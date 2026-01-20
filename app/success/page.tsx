@@ -64,13 +64,11 @@ function SuccessContent() {
           </div>
 
           <div className="pt-4 border-t border-gray-200 space-y-3">
-            {subscriberId && (
-              <Link href={`/dashboard?id=${subscriberId}`}>
-                <Button className="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700">
-                  Get Your First Message Now
-                </Button>
-              </Link>
-            )}
+            <Link href={subscriberId ? `/dashboard?id=${subscriberId}` : '/dashboard'}>
+              <Button className="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700">
+                Get Your First Message Now
+              </Button>
+            </Link>
             <Link href="/">
               <Button variant="outline" className="w-full border-rose-200 text-rose-600 hover:bg-rose-50">
                 Back to Home

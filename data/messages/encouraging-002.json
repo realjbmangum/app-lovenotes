@@ -1,0 +1,752 @@
+[
+  {
+    "id": 1401,
+    "theme": "encouraging",
+    "content": "Just a note to say You've got this, {wife_name}! I believe in you completely. Can't wait to see you later!"
+  },
+  {
+    "id": 1402,
+    "theme": "encouraging",
+    "content": "Just a note to say Remember how strong you are - you can handle anything! Thinking of you always."
+  },
+  {
+    "id": 1403,
+    "theme": "encouraging",
+    "content": "Random thought: I'm so proud of everything you've accomplished. Forever yours."
+  },
+  {
+    "id": 1404,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! Whatever you're facing today, I know you'll overcome it. You're the best!"
+  },
+  {
+    "id": 1405,
+    "theme": "encouraging",
+    "content": "{wife_name}, Your determination and courage inspire me every day. Have a wonderful day!"
+  },
+  {
+    "id": 1406,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! You are capable of amazing things, {wife_name}! Thinking of you always."
+  },
+  {
+    "id": 1407,
+    "theme": "encouraging",
+    "content": "Sending you love because Don't forget how incredible you truly are. Miss you!"
+  },
+  {
+    "id": 1408,
+    "theme": "encouraging",
+    "content": "I'm your biggest cheerleader, today and always. XOXO"
+  },
+  {
+    "id": 1409,
+    "theme": "encouraging",
+    "content": "Thinking of you and You have overcome so much - this is nothing for you! XOXO"
+  },
+  {
+    "id": 1410,
+    "theme": "encouraging",
+    "content": "{wife_name}, Your strength and resilience amaze me constantly. Miss you!"
+  },
+  {
+    "id": 1411,
+    "theme": "encouraging",
+    "content": "Sending you love because Believe in yourself as much as I believe in you, {wife_name}. You're amazing!"
+  },
+  {
+    "id": 1412,
+    "theme": "encouraging",
+    "content": "Sweetheart, You're doing an amazing job, even when it doesn't feel like it. Can't wait to see you later!"
+  },
+  {
+    "id": 1413,
+    "theme": "encouraging",
+    "content": "Quick reminder: I'm so proud to be married to such a strong woman. Thinking of you always."
+  },
+  {
+    "id": 1414,
+    "theme": "encouraging",
+    "content": "Quick reminder: Whatever challenge you face, we face it together. Love you!"
+  },
+  {
+    "id": 1415,
+    "theme": "encouraging",
+    "content": "My love, You have everything it takes to succeed. Forever yours."
+  },
+  {
+    "id": 1416,
+    "theme": "encouraging",
+    "content": "Just because I can: I see your potential, and it's limitless, {wife_name}! You make me so happy!"
+  },
+  {
+    "id": 1417,
+    "theme": "encouraging",
+    "content": "Just because I can: Keep going - you're closer to your goals than you think. You make me so happy!"
+  },
+  {
+    "id": 1418,
+    "theme": "encouraging",
+    "content": "Your hard work will pay off. I know it will. You're amazing!"
+  },
+  {
+    "id": 1419,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that You inspire everyone around you with your dedication. XOXO"
+  },
+  {
+    "id": 1420,
+    "theme": "encouraging",
+    "content": "Just because I can: Remember: you are braver than you believe. You're amazing!"
+  },
+  {
+    "id": 1421,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! I'm here cheering you on every step of the way. XOXO"
+  },
+  {
+    "id": 1422,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! You handle everything with such grace and poise. XOXO"
+  },
+  {
+    "id": 1423,
+    "theme": "encouraging",
+    "content": "Sweetheart, Your perseverance is truly remarkable, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1424,
+    "theme": "encouraging",
+    "content": "I was just thinking... Don't give up - you're doing better than you think! You're the best!"
+  },
+  {
+    "id": 1425,
+    "theme": "encouraging",
+    "content": "Sending you love because I'm so proud of the woman you are and who you're becoming."
+  },
+  {
+    "id": 1426,
+    "theme": "encouraging",
+    "content": "Sending you love because You can do hard things. You've proven that time and again. Love you!"
+  },
+  {
+    "id": 1427,
+    "theme": "encouraging",
+    "content": "Whatever today brings, I know you'll handle it beautifully. Love you!"
+  },
+  {
+    "id": 1428,
+    "theme": "encouraging",
+    "content": "Just because I can: Your courage in facing challenges inspires me. XOXO"
+  },
+  {
+    "id": 1429,
+    "theme": "encouraging",
+    "content": "Keep shining, {wife_name} - the world needs your light! XOXO"
+  },
+  {
+    "id": 1430,
+    "theme": "encouraging",
+    "content": "Random thought: I believe in your dreams as much as you do."
+  },
+  {
+    "id": 1431,
+    "theme": "encouraging",
+    "content": "Just because I can: You are making a difference, even when you can't see it."
+  },
+  {
+    "id": 1432,
+    "theme": "encouraging",
+    "content": "Just because I can: Stay strong - better days are coming. You're amazing!"
+  },
+  {
+    "id": 1433,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, Your positive attitude is contagious and inspiring. Miss you!"
+  },
+  {
+    "id": 1434,
+    "theme": "encouraging",
+    "content": "Sweetheart, I'm so proud of how far you've come, {wife_name}. Thinking of you always."
+  },
+  {
+    "id": 1435,
+    "theme": "encouraging",
+    "content": "{wife_name}, You deserve all the success that's coming your way. You're amazing!"
+  },
+  {
+    "id": 1436,
+    "theme": "encouraging",
+    "content": "Quick reminder: Keep pushing forward - you're almost there! You make me so happy!"
+  },
+  {
+    "id": 1437,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! Your strength amazes me more every day. Love you!"
+  },
+  {
+    "id": 1438,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, I know you'll achieve great things, because you always do. XOXO"
+  },
+  {
+    "id": 1439,
+    "theme": "encouraging",
+    "content": "Sweetheart, You handle pressure with such grace, {wife_name}. You're amazing!"
+  },
+  {
+    "id": 1440,
+    "theme": "encouraging",
+    "content": "Sweetheart, Remember: I'm always in your corner, cheering you on! Love you!"
+  },
+  {
+    "id": 1441,
+    "theme": "encouraging",
+    "content": "Random thought: You've got this, {wife_name}! I believe in you completely. Love you!"
+  },
+  {
+    "id": 1442,
+    "theme": "encouraging",
+    "content": "Hey beautiful, Remember how strong you are - you can handle anything! Miss you!"
+  },
+  {
+    "id": 1443,
+    "theme": "encouraging",
+    "content": "I was just thinking... I'm so proud of everything you've accomplished. Have a wonderful day!"
+  },
+  {
+    "id": 1444,
+    "theme": "encouraging",
+    "content": "Just because I can: Whatever you're facing today, I know you'll overcome it. Forever yours."
+  },
+  {
+    "id": 1445,
+    "theme": "encouraging",
+    "content": "Sweetheart, Your determination and courage inspire me every day. Thinking of you always."
+  },
+  {
+    "id": 1446,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that You are capable of amazing things, {wife_name}! You make me so happy!"
+  },
+  {
+    "id": 1447,
+    "theme": "encouraging",
+    "content": "I was just thinking... Don't forget how incredible you truly are. You're amazing!"
+  },
+  {
+    "id": 1448,
+    "theme": "encouraging",
+    "content": "My love, I'm your biggest cheerleader, today and always. Miss you!"
+  },
+  {
+    "id": 1449,
+    "theme": "encouraging",
+    "content": "Sending you love because You have overcome so much - this is nothing for you! Have a wonderful day!"
+  },
+  {
+    "id": 1450,
+    "theme": "encouraging",
+    "content": "{wife_name}, Your strength and resilience amaze me constantly. You're the best!"
+  },
+  {
+    "id": 1451,
+    "theme": "encouraging",
+    "content": "Just because I can: Believe in yourself as much as I believe in you, {wife_name}. You're the best!"
+  },
+  {
+    "id": 1452,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that You're doing an amazing job, even when it doesn't feel like it."
+  },
+  {
+    "id": 1453,
+    "theme": "encouraging",
+    "content": "Sending you love because I'm so proud to be married to such a strong woman. You're amazing!"
+  },
+  {
+    "id": 1454,
+    "theme": "encouraging",
+    "content": "Sending you love because Whatever challenge you face, we face it together. Thinking of you always."
+  },
+  {
+    "id": 1455,
+    "theme": "encouraging",
+    "content": "Random thought: You have everything it takes to succeed. Thinking of you always."
+  },
+  {
+    "id": 1456,
+    "theme": "encouraging",
+    "content": "Just a note to say I see your potential, and it's limitless, {wife_name}! You're the best!"
+  },
+  {
+    "id": 1457,
+    "theme": "encouraging",
+    "content": "Keep going - you're closer to your goals than you think. Miss you!"
+  },
+  {
+    "id": 1458,
+    "theme": "encouraging",
+    "content": "Thinking of you and Your hard work will pay off. I know it will. You make me so happy!"
+  },
+  {
+    "id": 1459,
+    "theme": "encouraging",
+    "content": "My love, You inspire everyone around you with your dedication. You're amazing!"
+  },
+  {
+    "id": 1460,
+    "theme": "encouraging",
+    "content": "Remember: you are braver than you believe. You make me so happy!"
+  },
+  {
+    "id": 1461,
+    "theme": "encouraging",
+    "content": "Just because I can: I'm here cheering you on every step of the way. You're amazing!"
+  },
+  {
+    "id": 1462,
+    "theme": "encouraging",
+    "content": "Hey beautiful, You handle everything with such grace and poise. Love you!"
+  },
+  {
+    "id": 1463,
+    "theme": "encouraging",
+    "content": "Quick reminder: Your perseverance is truly remarkable, {wife_name}. Have a wonderful day!"
+  },
+  {
+    "id": 1464,
+    "theme": "encouraging",
+    "content": "My love, Don't give up - you're doing better than you think! XOXO"
+  },
+  {
+    "id": 1465,
+    "theme": "encouraging",
+    "content": "{wife_name}, I'm so proud of the woman you are and who you're becoming. You're the best!"
+  },
+  {
+    "id": 1466,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that You can do hard things. You've proven that time and again. XOXO"
+  },
+  {
+    "id": 1467,
+    "theme": "encouraging",
+    "content": "Whatever today brings, I know you'll handle it beautifully."
+  },
+  {
+    "id": 1468,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! Your courage in facing challenges inspires me. You're the best!"
+  },
+  {
+    "id": 1469,
+    "theme": "encouraging",
+    "content": "My love, Keep shining, {wife_name} - the world needs your light! Forever yours."
+  },
+  {
+    "id": 1470,
+    "theme": "encouraging",
+    "content": "Just a note to say I believe in your dreams as much as you do. Have a wonderful day!"
+  },
+  {
+    "id": 1471,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, You are making a difference, even when you can't see it. You're amazing!"
+  },
+  {
+    "id": 1472,
+    "theme": "encouraging",
+    "content": "Thinking of you and Stay strong - better days are coming. Love you!"
+  },
+  {
+    "id": 1473,
+    "theme": "encouraging",
+    "content": "Your positive attitude is contagious and inspiring. XOXO"
+  },
+  {
+    "id": 1474,
+    "theme": "encouraging",
+    "content": "Random thought: I'm so proud of how far you've come, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1475,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! You deserve all the success that's coming your way. Can't wait to see you later!"
+  },
+  {
+    "id": 1476,
+    "theme": "encouraging",
+    "content": "Hey beautiful, Keep pushing forward - you're almost there! Have a wonderful day!"
+  },
+  {
+    "id": 1477,
+    "theme": "encouraging",
+    "content": "Sending you love because Your strength amazes me more every day. XOXO"
+  },
+  {
+    "id": 1478,
+    "theme": "encouraging",
+    "content": "Just a note to say I know you'll achieve great things, because you always do. You make me so happy!"
+  },
+  {
+    "id": 1479,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, You handle pressure with such grace, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1480,
+    "theme": "encouraging",
+    "content": "{wife_name}, Remember: I'm always in your corner, cheering you on! You're the best!"
+  },
+  {
+    "id": 1481,
+    "theme": "encouraging",
+    "content": "Sweetheart, You've got this, {wife_name}! I believe in you completely. Thinking of you always."
+  },
+  {
+    "id": 1482,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, Remember how strong you are - you can handle anything! Have a wonderful day!"
+  },
+  {
+    "id": 1483,
+    "theme": "encouraging",
+    "content": "Random thought: I'm so proud of everything you've accomplished. XOXO"
+  },
+  {
+    "id": 1484,
+    "theme": "encouraging",
+    "content": "Random thought: Whatever you're facing today, I know you'll overcome it. Thinking of you always."
+  },
+  {
+    "id": 1485,
+    "theme": "encouraging",
+    "content": "Just because I can: Your determination and courage inspire me every day. Miss you!"
+  },
+  {
+    "id": 1486,
+    "theme": "encouraging",
+    "content": "Random thought: You are capable of amazing things, {wife_name}!"
+  },
+  {
+    "id": 1487,
+    "theme": "encouraging",
+    "content": "Thinking of you and Don't forget how incredible you truly are. You're amazing!"
+  },
+  {
+    "id": 1488,
+    "theme": "encouraging",
+    "content": "My love, I'm your biggest cheerleader, today and always. Thinking of you always."
+  },
+  {
+    "id": 1489,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that You have overcome so much - this is nothing for you! Forever yours."
+  },
+  {
+    "id": 1490,
+    "theme": "encouraging",
+    "content": "I was just thinking... Your strength and resilience amaze me constantly. Can't wait to see you later!"
+  },
+  {
+    "id": 1491,
+    "theme": "encouraging",
+    "content": "Sweetheart, Believe in yourself as much as I believe in you, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1492,
+    "theme": "encouraging",
+    "content": "Thinking of you and You're doing an amazing job, even when it doesn't feel like it. You make me so happy!"
+  },
+  {
+    "id": 1493,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! I'm so proud to be married to such a strong woman. XOXO"
+  },
+  {
+    "id": 1494,
+    "theme": "encouraging",
+    "content": "Sending you love because Whatever challenge you face, we face it together. XOXO"
+  },
+  {
+    "id": 1495,
+    "theme": "encouraging",
+    "content": "Sending you love because You have everything it takes to succeed. Have a wonderful day!"
+  },
+  {
+    "id": 1496,
+    "theme": "encouraging",
+    "content": "Just a note to say I see your potential, and it's limitless, {wife_name}! You're the best!"
+  },
+  {
+    "id": 1497,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that Keep going - you're closer to your goals than you think. Can't wait to see you later!"
+  },
+  {
+    "id": 1498,
+    "theme": "encouraging",
+    "content": "Just a note to say Your hard work will pay off. I know it will. Miss you!"
+  },
+  {
+    "id": 1499,
+    "theme": "encouraging",
+    "content": "Random thought: You inspire everyone around you with your dedication. Have a wonderful day!"
+  },
+  {
+    "id": 1500,
+    "theme": "encouraging",
+    "content": "My love, Remember: you are braver than you believe."
+  },
+  {
+    "id": 1501,
+    "theme": "encouraging",
+    "content": "Random thought: I'm here cheering you on every step of the way. You're amazing!"
+  },
+  {
+    "id": 1502,
+    "theme": "encouraging",
+    "content": "Random thought: You handle everything with such grace and poise."
+  },
+  {
+    "id": 1503,
+    "theme": "encouraging",
+    "content": "Random thought: Your perseverance is truly remarkable, {wife_name}. Miss you!"
+  },
+  {
+    "id": 1504,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, Don't give up - you're doing better than you think! You're amazing!"
+  },
+  {
+    "id": 1505,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that I'm so proud of the woman you are and who you're becoming. Miss you!"
+  },
+  {
+    "id": 1506,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! You can do hard things. You've proven that time and again. XOXO"
+  },
+  {
+    "id": 1507,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, Whatever today brings, I know you'll handle it beautifully. Love you!"
+  },
+  {
+    "id": 1508,
+    "theme": "encouraging",
+    "content": "{wife_name}, Your courage in facing challenges inspires me. Forever yours."
+  },
+  {
+    "id": 1509,
+    "theme": "encouraging",
+    "content": "Thinking of you and Keep shining, {wife_name} - the world needs your light! Have a wonderful day!"
+  },
+  {
+    "id": 1510,
+    "theme": "encouraging",
+    "content": "I believe in your dreams as much as you do. Love you!"
+  },
+  {
+    "id": 1511,
+    "theme": "encouraging",
+    "content": "Sending you love because You are making a difference, even when you can't see it."
+  },
+  {
+    "id": 1512,
+    "theme": "encouraging",
+    "content": "Thinking of you and Stay strong - better days are coming. Have a wonderful day!"
+  },
+  {
+    "id": 1513,
+    "theme": "encouraging",
+    "content": "Random thought: Your positive attitude is contagious and inspiring. XOXO"
+  },
+  {
+    "id": 1514,
+    "theme": "encouraging",
+    "content": "Just because I can: I'm so proud of how far you've come, {wife_name}. Miss you!"
+  },
+  {
+    "id": 1515,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, You deserve all the success that's coming your way. Thinking of you always."
+  },
+  {
+    "id": 1516,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, Keep pushing forward - you're almost there! Love you!"
+  },
+  {
+    "id": 1517,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! Your strength amazes me more every day. Thinking of you always."
+  },
+  {
+    "id": 1518,
+    "theme": "encouraging",
+    "content": "Hope you're having a great day! I know you'll achieve great things, because you always do. Can't wait to see you later!"
+  },
+  {
+    "id": 1519,
+    "theme": "encouraging",
+    "content": "I was just thinking... You handle pressure with such grace, {wife_name}. You're amazing!"
+  },
+  {
+    "id": 1520,
+    "theme": "encouraging",
+    "content": "Just a note to say Remember: I'm always in your corner, cheering you on! Can't wait to see you later!"
+  },
+  {
+    "id": 1521,
+    "theme": "encouraging",
+    "content": "Quick reminder: You've got this, {wife_name}! I believe in you completely. Can't wait to see you later!"
+  },
+  {
+    "id": 1522,
+    "theme": "encouraging",
+    "content": "Just because I can: Remember how strong you are - you can handle anything! You make me so happy!"
+  },
+  {
+    "id": 1523,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that I'm so proud of everything you've accomplished. Love you!"
+  },
+  {
+    "id": 1524,
+    "theme": "encouraging",
+    "content": "Quick reminder: Whatever you're facing today, I know you'll overcome it. You're amazing!"
+  },
+  {
+    "id": 1525,
+    "theme": "encouraging",
+    "content": "Sending you love because Your determination and courage inspire me every day."
+  },
+  {
+    "id": 1526,
+    "theme": "encouraging",
+    "content": "{wife_name}, You are capable of amazing things, {wife_name}! Forever yours."
+  },
+  {
+    "id": 1527,
+    "theme": "encouraging",
+    "content": "Sending you love because Don't forget how incredible you truly are. You're the best!"
+  },
+  {
+    "id": 1528,
+    "theme": "encouraging",
+    "content": "My love, I'm your biggest cheerleader, today and always. Miss you!"
+  },
+  {
+    "id": 1529,
+    "theme": "encouraging",
+    "content": "I was just thinking... You have overcome so much - this is nothing for you! Thinking of you always."
+  },
+  {
+    "id": 1530,
+    "theme": "encouraging",
+    "content": "Your strength and resilience amaze me constantly. Thinking of you always."
+  },
+  {
+    "id": 1531,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that Believe in yourself as much as I believe in you, {wife_name}. Thinking of you always."
+  },
+  {
+    "id": 1532,
+    "theme": "encouraging",
+    "content": "Sweetheart, You're doing an amazing job, even when it doesn't feel like it. Thinking of you always."
+  },
+  {
+    "id": 1533,
+    "theme": "encouraging",
+    "content": "{wife_name}, I'm so proud to be married to such a strong woman. Thinking of you always."
+  },
+  {
+    "id": 1534,
+    "theme": "encouraging",
+    "content": "Just wanted you to know that Whatever challenge you face, we face it together. You're the best!"
+  },
+  {
+    "id": 1535,
+    "theme": "encouraging",
+    "content": "Just a note to say You have everything it takes to succeed. Love you!"
+  },
+  {
+    "id": 1536,
+    "theme": "encouraging",
+    "content": "{wife_name}, I see your potential, and it's limitless, {wife_name}! You make me so happy!"
+  },
+  {
+    "id": 1537,
+    "theme": "encouraging",
+    "content": "Hey beautiful, Keep going - you're closer to your goals than you think. Love you!"
+  },
+  {
+    "id": 1538,
+    "theme": "encouraging",
+    "content": "Hey beautiful, Your hard work will pay off. I know it will. You're amazing!"
+  },
+  {
+    "id": 1539,
+    "theme": "encouraging",
+    "content": "My love, You inspire everyone around you with your dedication. You're the best!"
+  },
+  {
+    "id": 1540,
+    "theme": "encouraging",
+    "content": "Sending you love because Remember: you are braver than you believe. Can't wait to see you later!"
+  },
+  {
+    "id": 1541,
+    "theme": "encouraging",
+    "content": "Hey beautiful, I'm here cheering you on every step of the way. You make me so happy!"
+  },
+  {
+    "id": 1542,
+    "theme": "encouraging",
+    "content": "Hey beautiful, You handle everything with such grace and poise. Love you!"
+  },
+  {
+    "id": 1543,
+    "theme": "encouraging",
+    "content": "I was just thinking... Your perseverance is truly remarkable, {wife_name}. Thinking of you always."
+  },
+  {
+    "id": 1544,
+    "theme": "encouraging",
+    "content": "Don't give up - you're doing better than you think! Thinking of you always."
+  },
+  {
+    "id": 1545,
+    "theme": "encouraging",
+    "content": "Thinking of you and I'm so proud of the woman you are and who you're becoming. Can't wait to see you later!"
+  },
+  {
+    "id": 1546,
+    "theme": "encouraging",
+    "content": "Hey {wife_name}, You can do hard things. You've proven that time and again. Miss you!"
+  },
+  {
+    "id": 1547,
+    "theme": "encouraging",
+    "content": "Thinking of you and Whatever today brings, I know you'll handle it beautifully. You're the best!"
+  },
+  {
+    "id": 1548,
+    "theme": "encouraging",
+    "content": "Thinking of you and Your courage in facing challenges inspires me. Can't wait to see you later!"
+  },
+  {
+    "id": 1549,
+    "theme": "encouraging",
+    "content": "Thinking of you and Keep shining, {wife_name} - the world needs your light!"
+  },
+  {
+    "id": 1550,
+    "theme": "encouraging",
+    "content": "Good morning, {wife_name}! I believe in your dreams as much as you do. You're the best!"
+  }
+]

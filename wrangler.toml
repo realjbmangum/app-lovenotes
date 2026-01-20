@@ -1,0 +1,25 @@
+name = "lovenotes-api"
+main = "worker/index.ts"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lovenotes-db"
+database_id = "98e6e4fe-c324-4337-b06f-90356b027be9"
+
+[vars]
+ENVIRONMENT = "development"
+ALLOWED_ORIGIN = "http://localhost:3000"
+
+# JWT_SECRET should be set via wrangler secret for production:
+# wrangler secret put JWT_SECRET
+
+# For local development
+[dev]
+port = 8787
+
+# Production environment
+[env.production]
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGIN = "https://lovenotes.app" }
+# Remember to set JWT_SECRET as a secret in production:
+# wrangler secret put JWT_SECRET --env production

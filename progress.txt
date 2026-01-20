@@ -1,0 +1,129 @@
+# Progress Log - LoveNotes
+
+## Codebase Patterns
+<!-- Add patterns here as you discover them -->
+- Phone numbers: Format with `formatPhoneNumber()`, validate with `validatePhoneNumber()`, store as 10 digits only
+- Form validation: Manual validation in `validateForm()`, clear errors on input change
+- API calls: Use `lib/api.ts` client, returns `{ success, checkoutUrl?, error? }`
+- **Auth**: JWT in httpOnly cookie (`lovenotes_auth`), 30-day expiry
+- **Protected endpoints**: `/api/subscriber`, `/api/messages/next` require auth cookie
+- **CORS**: Specific origin only (localhost:3000 in dev, lovenotes.app in prod)
+- **Testing**: Use `npm test` (vitest), test files named `*.test.ts`
+
+---
+
+## Session Log
+
+### 2026-01-09 - Project Setup & Story 1 Complete
+
+**Completed:**
+- Extracted starter project from love-notes.zip
+- Created PRD with 6 user stories
+- Implemented Story 1: Landing Page Polish
+  - Form validation (email, phone, wife name)
+  - Phone number auto-formatting
+  - Error states with visual feedback
+  - API submission to `/api/signup`
+- Created success page at `/success`
+- Created mock API route for local dev
+
+**Files Changed:**
+- `app/page.tsx` - Added validation, error states, API integration
+- `app/success/page.tsx` - New success confirmation page
+- `app/api/signup/route.ts` - Mock API for local dev
+- `lib/api.ts` - API client with validation helpers
+- `tasks/prd-lovenotes-mvp.md` - Full PRD document
+- `CLAUDE.md` - Project context
+
+**Decisions:**
+- Using mock API route for local dev, will replace with Cloudflare Worker
+- Phone stored as 10 digits, formatted on display only
+- Default theme: romantic, default frequency: daily
+- Success page uses URL param for wife's name
+
+**Learnings:**
+- Next.js 15.2.6 has a security vulnerability - should upgrade
+- shadcn/ui already installed with full component library
+
+**Next Steps:**
+- Story 2: Stripe Checkout Integration
+- Set up Cloudflare Worker project
+- Create D1 database schema
+
+---
+
+### 2026-01-09 - Story 4: Message Library (Batch 1)
+
+**Completed:**
+- Created 560 messages across all themes
+- Built compile script to generate SQL from JSON
+- Created D1 schema with all tables and indexes
+
+**Message Count:**
+- Romantic: 250 (200 daily + 50 occasions)
+- Funny: 100
+- Appreciative: 110 (100 daily + 10 Mother's Day)
+- Encouraging: 100
+- Special occasions: 60 (10 each for anniversary, birthday, Valentine's, Mother's Day, Christmas, just because)
+
+**Files Created:**
+- `data/messages/romantic-001.json` (100 messages)
+- `data/messages/romantic-002.json` (100 messages)
+- `data/messages/funny-001.json` (100 messages)
+- `data/messages/appreciative-001.json` (100 messages)
+- `data/messages/encouraging-001.json` (100 messages)
+- `data/messages/occasions.json` (60 messages)
+- `data/schema.sql` - D1 database schema
+- `data/seed-messages.sql` - Compiled SQL inserts
+- `scripts/compile-messages.js` - JSON to SQL compiler
+
+**Patterns:**
+- Messages use `{wife_name}` placeholder - replaced at send time
+- Occasion field is NULL for daily messages, set for special dates
+- IDs are auto-generated in D1, not from JSON
+
+**Next Steps:**
+- Generate more messages to reach 730 per theme (currently at ~100-250 each)
+- Or proceed with current set for MVP launch
+- Story 2 (Stripe) or Story 5 (SMS) when ready
+
+---
+
+### 2026-01-20 - Security Fixes & Test Infrastructure
+
+**Completed:**
+- Implemented JWT authentication with httpOnly cookies
+- Fixed CORS to use specific origins (not `*`)
+- Gated test endpoint behind environment check (blocked in production)
+- Added server-side input validation (email regex, phone digits, name sanitization)
+- Updated dashboard to use cookie-based auth
+- Added vitest test infrastructure with initial tests
+
+**Files Changed:**
+- `worker/index.ts` - JWT auth, CORS fix, input validation, env gating
+- `wrangler.toml` - Added JWT_SECRET and ALLOWED_ORIGIN config
+- `app/dashboard/page.tsx` - Cookie-based auth with `credentials: 'include'`
+- `package.json` - Added test scripts
+- `vitest.config.ts` - New test config
+- `lib/api.test.ts` - New validation tests
+- `CLAUDE.md` - Updated API docs with auth requirements
+
+**Security Fixes:**
+1. JWT auth replaces URL-based subscriber ID (was CRITICAL vulnerability)
+2. CORS restricted to specific origins (was `*`)
+3. Test endpoint blocked in production
+4. Wife's name sanitized to prevent injection
+
+**Decisions:**
+- JWT expires in 30 days
+- Using Web Crypto API for JWT (no external deps in Worker)
+- SameSite=Lax for cookies (balance security/usability)
+- Secure flag only in production (allows localhost dev)
+
+**Next Steps:**
+- [ ] Set JWT_SECRET in production: `wrangler secret put JWT_SECRET`
+- [ ] Add more tests (API integration tests)
+- [ ] Story 2: Stripe Checkout Integration
+- [ ] Story 5: SMS Sender (Twilio)
+
+---

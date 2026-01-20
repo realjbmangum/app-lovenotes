@@ -1,0 +1,482 @@
+[
+  {
+    "id": 1701,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Happy Anniversary, {wife_name}! Another year of loving you has been the greatest gift."
+  },
+  {
+    "id": 1702,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "On this special day, I want you to know that marrying you was the best decision I ever made."
+  },
+  {
+    "id": 1703,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Happy Anniversary! Every year with you is better than the last, {wife_name}."
+  },
+  {
+    "id": 1704,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Celebrating another year of us today. I love you more than ever!"
+  },
+  {
+    "id": 1705,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Happy Anniversary, my love! Here's to many more years of happiness together."
+  },
+  {
+    "id": 1706,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Today marks another year of the most beautiful journey of my life - being your husband."
+  },
+  {
+    "id": 1707,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Happy Anniversary, {wife_name}! You still give me butterflies after all this time."
+  },
+  {
+    "id": 1708,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Another year, another reason to be grateful for you. Happy Anniversary!"
+  },
+  {
+    "id": 1709,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Celebrating the day I promised to love you forever. And I meant every word."
+  },
+  {
+    "id": 1710,
+    "theme": "occasions",
+    "occasion": "anniversary",
+    "content": "Happy Anniversary! I'd choose you all over again in a heartbeat, {wife_name}."
+  },
+  {
+    "id": 1711,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Happy Birthday to the most amazing woman I know! Make today special, {wife_name}!"
+  },
+  {
+    "id": 1712,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "It's your special day, {wife_name}! I hope this year brings you everything you deserve."
+  },
+  {
+    "id": 1713,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Happy Birthday, my love! The world is better because you're in it."
+  },
+  {
+    "id": 1714,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Wishing the happiest of birthdays to my beautiful wife. I love you!"
+  },
+  {
+    "id": 1715,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Happy Birthday, {wife_name}! May all your dreams come true this year."
+  },
+  {
+    "id": 1716,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Today we celebrate you! Happy Birthday to my favorite person."
+  },
+  {
+    "id": 1717,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Another year of you means another year of blessings for me. Happy Birthday!"
+  },
+  {
+    "id": 1718,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Happy Birthday to my best friend and soulmate. Enjoy every moment today!"
+  },
+  {
+    "id": 1719,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "It's your day, {wife_name}! Let me spoil you like you deserve."
+  },
+  {
+    "id": 1720,
+    "theme": "occasions",
+    "occasion": "birthday",
+    "content": "Happy Birthday! You only get more amazing with each passing year."
+  },
+  {
+    "id": 1721,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Happy Valentine's Day, {wife_name}! You're the love of my life, today and always."
+  },
+  {
+    "id": 1722,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "On this day of love, I want you to know you mean everything to me."
+  },
+  {
+    "id": 1723,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Happy Valentine's Day! Every day with you feels like Valentine's Day to me."
+  },
+  {
+    "id": 1724,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "To my forever Valentine: I love you more than words can say, {wife_name}."
+  },
+  {
+    "id": 1725,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Happy Valentine's Day! Thank you for filling my life with love."
+  },
+  {
+    "id": 1726,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "You're not just my Valentine - you're my everything. Happy Valentine's Day!"
+  },
+  {
+    "id": 1727,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Sending all my love to you today and every day. Happy Valentine's Day, {wife_name}!"
+  },
+  {
+    "id": 1728,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Happy Valentine's Day to the woman who stole my heart and keeps it safe."
+  },
+  {
+    "id": 1729,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "Every love song, every romantic movie - they all remind me of you. Happy Valentine's Day!"
+  },
+  {
+    "id": 1730,
+    "theme": "occasions",
+    "occasion": "valentines",
+    "content": "You make every day feel special. Happy Valentine's Day, my love!"
+  },
+  {
+    "id": 1731,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Happy Mother's Day to the most incredible mom and wife! We're so blessed, {wife_name}."
+  },
+  {
+    "id": 1732,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Thank you for being such an amazing mother. Happy Mother's Day!"
+  },
+  {
+    "id": 1733,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Watching you be a mom is the most beautiful thing. Happy Mother's Day, {wife_name}!"
+  },
+  {
+    "id": 1734,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "You give so much to our family. Today is all about celebrating you!"
+  },
+  {
+    "id": 1735,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Happy Mother's Day! The kids are lucky to have you, and so am I."
+  },
+  {
+    "id": 1736,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Your love and dedication as a mother inspire me every day. Happy Mother's Day!"
+  },
+  {
+    "id": 1737,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "To the heart of our family: Happy Mother's Day, {wife_name}!"
+  },
+  {
+    "id": 1738,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Happy Mother's Day to the woman who makes our house a home."
+  },
+  {
+    "id": 1739,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Thank you for the sacrifices you make for our family. You're an amazing mom!"
+  },
+  {
+    "id": 1740,
+    "theme": "occasions",
+    "occasion": "mothers_day",
+    "content": "Happy Mother's Day! Our family is blessed because of your love."
+  },
+  {
+    "id": 1741,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Merry Christmas, {wife_name}! You're the best gift I've ever received."
+  },
+  {
+    "id": 1742,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Wishing you a Christmas as wonderful as you are, my love!"
+  },
+  {
+    "id": 1743,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Merry Christmas! I'm so grateful to spend this season with you."
+  },
+  {
+    "id": 1744,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "You make the holidays magical, {wife_name}. Merry Christmas!"
+  },
+  {
+    "id": 1745,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "All I want for Christmas is you. Merry Christmas, my love!"
+  },
+  {
+    "id": 1746,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Merry Christmas to the love of my life! May this season bring you joy."
+  },
+  {
+    "id": 1747,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Spending Christmas with you is the greatest gift. Merry Christmas, {wife_name}!"
+  },
+  {
+    "id": 1748,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Merry Christmas! Thank you for making every holiday special."
+  },
+  {
+    "id": 1749,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "You are my favorite part of every Christmas. Love you, {wife_name}!"
+  },
+  {
+    "id": 1750,
+    "theme": "occasions",
+    "occasion": "christmas",
+    "content": "Merry Christmas to my wife, my best friend, my everything."
+  },
+  {
+    "id": 1751,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Happy Thanksgiving, {wife_name}! I'm most thankful for you."
+  },
+  {
+    "id": 1752,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Today I'm counting my blessings, and you're at the top of the list."
+  },
+  {
+    "id": 1753,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Happy Thanksgiving! Thank you for filling my life with love and joy."
+  },
+  {
+    "id": 1754,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Grateful for you today and every day, {wife_name}."
+  },
+  {
+    "id": 1755,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Happy Thanksgiving to the woman I'm most thankful for!"
+  },
+  {
+    "id": 1756,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "You're the reason I have so much to be thankful for. Happy Thanksgiving!"
+  },
+  {
+    "id": 1757,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "On this day of gratitude, I'm most grateful for your love, {wife_name}."
+  },
+  {
+    "id": 1758,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Happy Thanksgiving! Our family is blessed because of you."
+  },
+  {
+    "id": 1759,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "Thankful for every moment with you. Happy Thanksgiving, my love!"
+  },
+  {
+    "id": 1760,
+    "theme": "occasions",
+    "occasion": "thanksgiving",
+    "content": "You make every day feel like Thanksgiving. I love you, {wife_name}!"
+  },
+  {
+    "id": 1761,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Happy New Year, {wife_name}! I can't wait to see what this year brings us."
+  },
+  {
+    "id": 1762,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Here's to another year of love and adventure together. Happy New Year!"
+  },
+  {
+    "id": 1763,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Happy New Year! My resolution is to love you even more this year."
+  },
+  {
+    "id": 1764,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Starting the new year with you by my side is the best gift, {wife_name}."
+  },
+  {
+    "id": 1765,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Happy New Year to my partner in everything! Love you!"
+  },
+  {
+    "id": 1766,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "May this new year bring us even more happiness together. Happy New Year!"
+  },
+  {
+    "id": 1767,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Happy New Year, {wife_name}! Every year with you is a blessing."
+  },
+  {
+    "id": 1768,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Cheers to us and another year of love. Happy New Year!"
+  },
+  {
+    "id": 1769,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Starting fresh with you is all I need. Happy New Year, my love!"
+  },
+  {
+    "id": 1770,
+    "theme": "occasions",
+    "occasion": "new_years",
+    "content": "Happy New Year! I'm so excited for our next chapter together."
+  },
+  {
+    "id": 1771,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "No special occasion - I just wanted you to know I love you, {wife_name}."
+  },
+  {
+    "id": 1772,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "This message is just because you're amazing and I wanted to remind you."
+  },
+  {
+    "id": 1773,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "No reason needed to tell you how much you mean to me."
+  },
+  {
+    "id": 1774,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "Just because I was thinking of you and wanted to send some love."
+  },
+  {
+    "id": 1775,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "Random reminder: You're wonderful and I'm lucky to have you, {wife_name}!"
+  },
+  {
+    "id": 1776,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "This is your 'just because I love you' message of the day."
+  },
+  {
+    "id": 1777,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "No occasion, no reason - just love for you, {wife_name}."
+  },
+  {
+    "id": 1778,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "Sending this just because you deserve to feel loved today."
+  },
+  {
+    "id": 1779,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "Just wanted to brighten your day. I love you, {wife_name}!"
+  },
+  {
+    "id": 1780,
+    "theme": "occasions",
+    "occasion": "just_because",
+    "content": "No special day needed to remind you how special you are to me."
+  }
+]

@@ -1,0 +1,752 @@
+[
+  {
+    "id": 1101,
+    "theme": "appreciative",
+    "content": "Quick reminder: Thank you for everything you do for our family, {wife_name}."
+  },
+  {
+    "id": 1102,
+    "theme": "appreciative",
+    "content": "I notice and appreciate all the little things you do every day."
+  },
+  {
+    "id": 1103,
+    "theme": "appreciative",
+    "content": "Sending you love because Your hard work and dedication inspire me constantly. You make me so happy!"
+  },
+  {
+    "id": 1104,
+    "theme": "appreciative",
+    "content": "Sweetheart, Thank you for making our house a home, {wife_name}. You're amazing!"
+  },
+  {
+    "id": 1105,
+    "theme": "appreciative",
+    "content": "Sending you love because I'm so grateful for your patience and understanding. Love you!"
+  },
+  {
+    "id": 1106,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, You amaze me with how much you give to everyone around you. You make me so happy!"
+  },
+  {
+    "id": 1107,
+    "theme": "appreciative",
+    "content": "Just a note to say Thank you for always believing in me, even when I don't. Thinking of you always."
+  },
+  {
+    "id": 1108,
+    "theme": "appreciative",
+    "content": "Sending you love because I appreciate your strength and resilience so much. Thinking of you always."
+  },
+  {
+    "id": 1109,
+    "theme": "appreciative",
+    "content": "Hey beautiful, You work so hard, and I see everything you do. Can't wait to see you later!"
+  },
+  {
+    "id": 1110,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, Thank you for being my partner in this beautiful life. Love you!"
+  },
+  {
+    "id": 1111,
+    "theme": "appreciative",
+    "content": "Just a note to say I'm grateful for your love and support every single day. Miss you!"
+  },
+  {
+    "id": 1112,
+    "theme": "appreciative",
+    "content": "I was just thinking... You make our family stronger just by being you, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1113,
+    "theme": "appreciative",
+    "content": "{wife_name}, Thank you for all the sacrifices you make for us. You make me so happy!"
+  },
+  {
+    "id": 1114,
+    "theme": "appreciative",
+    "content": "Just a note to say I appreciate how you always put others first. Can't wait to see you later!"
+  },
+  {
+    "id": 1115,
+    "theme": "appreciative",
+    "content": "Sweetheart, Your kindness to everyone around you is truly inspiring. Can't wait to see you later!"
+  },
+  {
+    "id": 1116,
+    "theme": "appreciative",
+    "content": "Just because I can: Thank you for making me a better person, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1117,
+    "theme": "appreciative",
+    "content": "Sending you love because I notice how hard you work and I appreciate you so much. Love you!"
+  },
+  {
+    "id": 1118,
+    "theme": "appreciative",
+    "content": "Sweetheart, You bring so much joy and warmth to everyone you meet. You make me so happy!"
+  },
+  {
+    "id": 1119,
+    "theme": "appreciative",
+    "content": "My love, Thank you for your endless love and compassion. Have a wonderful day!"
+  },
+  {
+    "id": 1120,
+    "theme": "appreciative",
+    "content": "Quick reminder: I'm grateful for every moment we share together. You're the best!"
+  },
+  {
+    "id": 1121,
+    "theme": "appreciative",
+    "content": "Sending you love because Your dedication to our family is truly remarkable. XOXO"
+  },
+  {
+    "id": 1122,
+    "theme": "appreciative",
+    "content": "Just a note to say Thank you for being my rock through everything. XOXO"
+  },
+  {
+    "id": 1123,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, I appreciate your wisdom and guidance in my life. Can't wait to see you later!"
+  },
+  {
+    "id": 1124,
+    "theme": "appreciative",
+    "content": "Thinking of you and You work harder than anyone I know, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1125,
+    "theme": "appreciative",
+    "content": "Thank you for filling our home with love and laughter. Forever yours."
+  },
+  {
+    "id": 1126,
+    "theme": "appreciative",
+    "content": "Sweetheart, I'm so grateful for your caring and nurturing spirit."
+  },
+  {
+    "id": 1127,
+    "theme": "appreciative",
+    "content": "Quick reminder: You make everyone around you feel loved and valued. XOXO"
+  },
+  {
+    "id": 1128,
+    "theme": "appreciative",
+    "content": "Quick reminder: Thank you for being my partner, my friend, my everything. You make me so happy!"
+  },
+  {
+    "id": 1129,
+    "theme": "appreciative",
+    "content": "Just a note to say I appreciate your thoughtfulness in everything you do. Miss you!"
+  },
+  {
+    "id": 1130,
+    "theme": "appreciative",
+    "content": "Thinking of you and Your love and devotion mean the world to me, {wife_name}. Have a wonderful day!"
+  },
+  {
+    "id": 1131,
+    "theme": "appreciative",
+    "content": "Thinking of you and Thank you for always being there when I need you. You make me so happy!"
+  },
+  {
+    "id": 1132,
+    "theme": "appreciative",
+    "content": "I'm grateful for your beautiful heart and soul. You make me so happy!"
+  },
+  {
+    "id": 1133,
+    "theme": "appreciative",
+    "content": "{wife_name}, You give so much of yourself to others every day. Forever yours."
+  },
+  {
+    "id": 1134,
+    "theme": "appreciative",
+    "content": "Thank you for making our life together so wonderful."
+  },
+  {
+    "id": 1135,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! I appreciate you more than you could ever know. Have a wonderful day!"
+  },
+  {
+    "id": 1136,
+    "theme": "appreciative",
+    "content": "Sweetheart, Your selflessness and generosity inspire me daily. Have a wonderful day!"
+  },
+  {
+    "id": 1137,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for loving me unconditionally, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1138,
+    "theme": "appreciative",
+    "content": "Hey beautiful, I'm so grateful to have you as my wife. Love you!"
+  },
+  {
+    "id": 1139,
+    "theme": "appreciative",
+    "content": "Sweetheart, You make everything better just by being present. Can't wait to see you later!"
+  },
+  {
+    "id": 1140,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for being the amazing woman you are. Have a wonderful day!"
+  },
+  {
+    "id": 1141,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Thank you for everything you do for our family, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1142,
+    "theme": "appreciative",
+    "content": "{wife_name}, I notice and appreciate all the little things you do every day. Forever yours."
+  },
+  {
+    "id": 1143,
+    "theme": "appreciative",
+    "content": "I was just thinking... Your hard work and dedication inspire me constantly. Miss you!"
+  },
+  {
+    "id": 1144,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! Thank you for making our house a home, {wife_name}. You're the best!"
+  },
+  {
+    "id": 1145,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! I'm so grateful for your patience and understanding. You're amazing!"
+  },
+  {
+    "id": 1146,
+    "theme": "appreciative",
+    "content": "Quick reminder: You amaze me with how much you give to everyone around you. You're amazing!"
+  },
+  {
+    "id": 1147,
+    "theme": "appreciative",
+    "content": "Random thought: Thank you for always believing in me, even when I don't. You make me so happy!"
+  },
+  {
+    "id": 1148,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! I appreciate your strength and resilience so much. Can't wait to see you later!"
+  },
+  {
+    "id": 1149,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! You work so hard, and I see everything you do. Can't wait to see you later!"
+  },
+  {
+    "id": 1150,
+    "theme": "appreciative",
+    "content": "I was just thinking... Thank you for being my partner in this beautiful life. You're amazing!"
+  },
+  {
+    "id": 1151,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that I'm grateful for your love and support every single day. Thinking of you always."
+  },
+  {
+    "id": 1152,
+    "theme": "appreciative",
+    "content": "Sweetheart, You make our family stronger just by being you, {wife_name}."
+  },
+  {
+    "id": 1153,
+    "theme": "appreciative",
+    "content": "Thank you for all the sacrifices you make for us. Thinking of you always."
+  },
+  {
+    "id": 1154,
+    "theme": "appreciative",
+    "content": "Just because I can: I appreciate how you always put others first. Miss you!"
+  },
+  {
+    "id": 1155,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Your kindness to everyone around you is truly inspiring. Love you!"
+  },
+  {
+    "id": 1156,
+    "theme": "appreciative",
+    "content": "Sweetheart, Thank you for making me a better person, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1157,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that I notice how hard you work and I appreciate you so much. Miss you!"
+  },
+  {
+    "id": 1158,
+    "theme": "appreciative",
+    "content": "I was just thinking... You bring so much joy and warmth to everyone you meet. Love you!"
+  },
+  {
+    "id": 1159,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, Thank you for your endless love and compassion."
+  },
+  {
+    "id": 1160,
+    "theme": "appreciative",
+    "content": "Sweetheart, I'm grateful for every moment we share together. You're the best!"
+  },
+  {
+    "id": 1161,
+    "theme": "appreciative",
+    "content": "Quick reminder: Your dedication to our family is truly remarkable. You're amazing!"
+  },
+  {
+    "id": 1162,
+    "theme": "appreciative",
+    "content": "Thank you for being my rock through everything. Forever yours."
+  },
+  {
+    "id": 1163,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! I appreciate your wisdom and guidance in my life. You're amazing!"
+  },
+  {
+    "id": 1164,
+    "theme": "appreciative",
+    "content": "Quick reminder: You work harder than anyone I know, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1165,
+    "theme": "appreciative",
+    "content": "Thinking of you and Thank you for filling our home with love and laughter. You make me so happy!"
+  },
+  {
+    "id": 1166,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that I'm so grateful for your caring and nurturing spirit. You're the best!"
+  },
+  {
+    "id": 1167,
+    "theme": "appreciative",
+    "content": "Random thought: You make everyone around you feel loved and valued. You make me so happy!"
+  },
+  {
+    "id": 1168,
+    "theme": "appreciative",
+    "content": "Thank you for being my partner, my friend, my everything. You make me so happy!"
+  },
+  {
+    "id": 1169,
+    "theme": "appreciative",
+    "content": "{wife_name}, I appreciate your thoughtfulness in everything you do. Have a wonderful day!"
+  },
+  {
+    "id": 1170,
+    "theme": "appreciative",
+    "content": "Quick reminder: Your love and devotion mean the world to me, {wife_name}. Thinking of you always."
+  },
+  {
+    "id": 1171,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for always being there when I need you. XOXO"
+  },
+  {
+    "id": 1172,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! I'm grateful for your beautiful heart and soul."
+  },
+  {
+    "id": 1173,
+    "theme": "appreciative",
+    "content": "Random thought: You give so much of yourself to others every day. You make me so happy!"
+  },
+  {
+    "id": 1174,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Thank you for making our life together so wonderful. You're amazing!"
+  },
+  {
+    "id": 1175,
+    "theme": "appreciative",
+    "content": "My love, I appreciate you more than you could ever know. Miss you!"
+  },
+  {
+    "id": 1176,
+    "theme": "appreciative",
+    "content": "Sweetheart, Your selflessness and generosity inspire me daily. You're amazing!"
+  },
+  {
+    "id": 1177,
+    "theme": "appreciative",
+    "content": "Just a note to say Thank you for loving me unconditionally, {wife_name}. Can't wait to see you later!"
+  },
+  {
+    "id": 1178,
+    "theme": "appreciative",
+    "content": "Thinking of you and I'm so grateful to have you as my wife. Miss you!"
+  },
+  {
+    "id": 1179,
+    "theme": "appreciative",
+    "content": "{wife_name}, You make everything better just by being present. You make me so happy!"
+  },
+  {
+    "id": 1180,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Thank you for being the amazing woman you are. Can't wait to see you later!"
+  },
+  {
+    "id": 1181,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, Thank you for everything you do for our family, {wife_name}. Love you!"
+  },
+  {
+    "id": 1182,
+    "theme": "appreciative",
+    "content": "{wife_name}, I notice and appreciate all the little things you do every day."
+  },
+  {
+    "id": 1183,
+    "theme": "appreciative",
+    "content": "My love, Your hard work and dedication inspire me constantly. You're amazing!"
+  },
+  {
+    "id": 1184,
+    "theme": "appreciative",
+    "content": "Sending you love because Thank you for making our house a home, {wife_name}. Thinking of you always."
+  },
+  {
+    "id": 1185,
+    "theme": "appreciative",
+    "content": "Hey beautiful, I'm so grateful for your patience and understanding. Love you!"
+  },
+  {
+    "id": 1186,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that You amaze me with how much you give to everyone around you. XOXO"
+  },
+  {
+    "id": 1187,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! Thank you for always believing in me, even when I don't."
+  },
+  {
+    "id": 1188,
+    "theme": "appreciative",
+    "content": "{wife_name}, I appreciate your strength and resilience so much. Can't wait to see you later!"
+  },
+  {
+    "id": 1189,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that You work so hard, and I see everything you do."
+  },
+  {
+    "id": 1190,
+    "theme": "appreciative",
+    "content": "Just a note to say Thank you for being my partner in this beautiful life. XOXO"
+  },
+  {
+    "id": 1191,
+    "theme": "appreciative",
+    "content": "Thinking of you and I'm grateful for your love and support every single day. Miss you!"
+  },
+  {
+    "id": 1192,
+    "theme": "appreciative",
+    "content": "I was just thinking... You make our family stronger just by being you, {wife_name}. Can't wait to see you later!"
+  },
+  {
+    "id": 1193,
+    "theme": "appreciative",
+    "content": "{wife_name}, Thank you for all the sacrifices you make for us. Thinking of you always."
+  },
+  {
+    "id": 1194,
+    "theme": "appreciative",
+    "content": "Quick reminder: I appreciate how you always put others first. Can't wait to see you later!"
+  },
+  {
+    "id": 1195,
+    "theme": "appreciative",
+    "content": "Thinking of you and Your kindness to everyone around you is truly inspiring."
+  },
+  {
+    "id": 1196,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Thank you for making me a better person, {wife_name}. XOXO"
+  },
+  {
+    "id": 1197,
+    "theme": "appreciative",
+    "content": "Sweetheart, I notice how hard you work and I appreciate you so much. XOXO"
+  },
+  {
+    "id": 1198,
+    "theme": "appreciative",
+    "content": "You bring so much joy and warmth to everyone you meet. XOXO"
+  },
+  {
+    "id": 1199,
+    "theme": "appreciative",
+    "content": "Random thought: Thank you for your endless love and compassion. You make me so happy!"
+  },
+  {
+    "id": 1200,
+    "theme": "appreciative",
+    "content": "Hey {wife_name}, I'm grateful for every moment we share together. XOXO"
+  },
+  {
+    "id": 1201,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! Your dedication to our family is truly remarkable. You make me so happy!"
+  },
+  {
+    "id": 1202,
+    "theme": "appreciative",
+    "content": "{wife_name}, Thank you for being my rock through everything. Miss you!"
+  },
+  {
+    "id": 1203,
+    "theme": "appreciative",
+    "content": "Sweetheart, I appreciate your wisdom and guidance in my life. You make me so happy!"
+  },
+  {
+    "id": 1204,
+    "theme": "appreciative",
+    "content": "You work harder than anyone I know, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1205,
+    "theme": "appreciative",
+    "content": "Thinking of you and Thank you for filling our home with love and laughter. You make me so happy!"
+  },
+  {
+    "id": 1206,
+    "theme": "appreciative",
+    "content": "Random thought: I'm so grateful for your caring and nurturing spirit. Thinking of you always."
+  },
+  {
+    "id": 1207,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! You make everyone around you feel loved and valued. Forever yours."
+  },
+  {
+    "id": 1208,
+    "theme": "appreciative",
+    "content": "Just because I can: Thank you for being my partner, my friend, my everything. Love you!"
+  },
+  {
+    "id": 1209,
+    "theme": "appreciative",
+    "content": "Quick reminder: I appreciate your thoughtfulness in everything you do."
+  },
+  {
+    "id": 1210,
+    "theme": "appreciative",
+    "content": "I was just thinking... Your love and devotion mean the world to me, {wife_name}. Miss you!"
+  },
+  {
+    "id": 1211,
+    "theme": "appreciative",
+    "content": "Thinking of you and Thank you for always being there when I need you. You make me so happy!"
+  },
+  {
+    "id": 1212,
+    "theme": "appreciative",
+    "content": "Quick reminder: I'm grateful for your beautiful heart and soul. Miss you!"
+  },
+  {
+    "id": 1213,
+    "theme": "appreciative",
+    "content": "{wife_name}, You give so much of yourself to others every day. Miss you!"
+  },
+  {
+    "id": 1214,
+    "theme": "appreciative",
+    "content": "Thank you for making our life together so wonderful. Can't wait to see you later!"
+  },
+  {
+    "id": 1215,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! I appreciate you more than you could ever know."
+  },
+  {
+    "id": 1216,
+    "theme": "appreciative",
+    "content": "I was just thinking... Your selflessness and generosity inspire me daily. Forever yours."
+  },
+  {
+    "id": 1217,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! Thank you for loving me unconditionally, {wife_name}. Can't wait to see you later!"
+  },
+  {
+    "id": 1218,
+    "theme": "appreciative",
+    "content": "Thinking of you and I'm so grateful to have you as my wife. XOXO"
+  },
+  {
+    "id": 1219,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! You make everything better just by being present. You're amazing!"
+  },
+  {
+    "id": 1220,
+    "theme": "appreciative",
+    "content": "Sweetheart, Thank you for being the amazing woman you are. Can't wait to see you later!"
+  },
+  {
+    "id": 1221,
+    "theme": "appreciative",
+    "content": "Quick reminder: Thank you for everything you do for our family, {wife_name}. Miss you!"
+  },
+  {
+    "id": 1222,
+    "theme": "appreciative",
+    "content": "{wife_name}, I notice and appreciate all the little things you do every day. You're amazing!"
+  },
+  {
+    "id": 1223,
+    "theme": "appreciative",
+    "content": "Hope you're having a great day! Your hard work and dedication inspire me constantly. You're the best!"
+  },
+  {
+    "id": 1224,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for making our house a home, {wife_name}. You make me so happy!"
+  },
+  {
+    "id": 1225,
+    "theme": "appreciative",
+    "content": "Sweetheart, I'm so grateful for your patience and understanding. Forever yours."
+  },
+  {
+    "id": 1226,
+    "theme": "appreciative",
+    "content": "{wife_name}, You amaze me with how much you give to everyone around you."
+  },
+  {
+    "id": 1227,
+    "theme": "appreciative",
+    "content": "My love, Thank you for always believing in me, even when I don't. You're amazing!"
+  },
+  {
+    "id": 1228,
+    "theme": "appreciative",
+    "content": "Just because I can: I appreciate your strength and resilience so much. You're the best!"
+  },
+  {
+    "id": 1229,
+    "theme": "appreciative",
+    "content": "Just because I can: You work so hard, and I see everything you do. XOXO"
+  },
+  {
+    "id": 1230,
+    "theme": "appreciative",
+    "content": "Random thought: Thank you for being my partner in this beautiful life. Have a wonderful day!"
+  },
+  {
+    "id": 1231,
+    "theme": "appreciative",
+    "content": "Thinking of you and I'm grateful for your love and support every single day."
+  },
+  {
+    "id": 1232,
+    "theme": "appreciative",
+    "content": "Random thought: You make our family stronger just by being you, {wife_name}. You're the best!"
+  },
+  {
+    "id": 1233,
+    "theme": "appreciative",
+    "content": "Just wanted you to know that Thank you for all the sacrifices you make for us. Forever yours."
+  },
+  {
+    "id": 1234,
+    "theme": "appreciative",
+    "content": "Good morning, {wife_name}! I appreciate how you always put others first. Forever yours."
+  },
+  {
+    "id": 1235,
+    "theme": "appreciative",
+    "content": "Sending you love because Your kindness to everyone around you is truly inspiring. Can't wait to see you later!"
+  },
+  {
+    "id": 1236,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for making me a better person, {wife_name}. Forever yours."
+  },
+  {
+    "id": 1237,
+    "theme": "appreciative",
+    "content": "My love, I notice how hard you work and I appreciate you so much. You're amazing!"
+  },
+  {
+    "id": 1238,
+    "theme": "appreciative",
+    "content": "Sweetheart, You bring so much joy and warmth to everyone you meet. Have a wonderful day!"
+  },
+  {
+    "id": 1239,
+    "theme": "appreciative",
+    "content": "Thank you for your endless love and compassion. You're amazing!"
+  },
+  {
+    "id": 1240,
+    "theme": "appreciative",
+    "content": "I was just thinking... I'm grateful for every moment we share together. You make me so happy!"
+  },
+  {
+    "id": 1241,
+    "theme": "appreciative",
+    "content": "Quick reminder: Your dedication to our family is truly remarkable. Forever yours."
+  },
+  {
+    "id": 1242,
+    "theme": "appreciative",
+    "content": "I was just thinking... Thank you for being my rock through everything. XOXO"
+  },
+  {
+    "id": 1243,
+    "theme": "appreciative",
+    "content": "I appreciate your wisdom and guidance in my life. Can't wait to see you later!"
+  },
+  {
+    "id": 1244,
+    "theme": "appreciative",
+    "content": "Quick reminder: You work harder than anyone I know, {wife_name}. You're the best!"
+  },
+  {
+    "id": 1245,
+    "theme": "appreciative",
+    "content": "Thinking of you and Thank you for filling our home with love and laughter. You make me so happy!"
+  },
+  {
+    "id": 1246,
+    "theme": "appreciative",
+    "content": "Just a note to say I'm so grateful for your caring and nurturing spirit. XOXO"
+  },
+  {
+    "id": 1247,
+    "theme": "appreciative",
+    "content": "My love, You make everyone around you feel loved and valued. Love you!"
+  },
+  {
+    "id": 1248,
+    "theme": "appreciative",
+    "content": "Hey beautiful, Thank you for being my partner, my friend, my everything. You're the best!"
+  },
+  {
+    "id": 1249,
+    "theme": "appreciative",
+    "content": "{wife_name}, I appreciate your thoughtfulness in everything you do. Miss you!"
+  },
+  {
+    "id": 1250,
+    "theme": "appreciative",
+    "content": "Your love and devotion mean the world to me, {wife_name}."
+  }
+]

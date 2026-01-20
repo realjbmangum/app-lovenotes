@@ -32,6 +32,8 @@ crons = ["0 13 * * *"]
 
 # Remember to set these secrets in production:
 # wrangler secret put JWT_SECRET --env production
-# wrangler secret put TWILIO_ACCOUNT_SID --env production
-# wrangler secret put TWILIO_AUTH_TOKEN --env production
-# wrangler secret put TWILIO_PHONE_NUMBER --env production
+# wrangler secret put SENDGRID_API_KEY
+# wrangler secret put SENDGRID_FROM_EMAIL (e.g., noreply@yourdomain.com)
+# wrangler secret put TWILIO_ACCOUNT_SID (optional - for SMS)
+# wrangler secret put TWILIO_AUTH_TOKEN (optional - for SMS)
+# wrangler secret put TWILIO_PHONE_NUMBER (optional - for SMS)

@@ -12,6 +12,8 @@ export interface Env {
   TWILIO_ACCOUNT_SID?: string;
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_PHONE_NUMBER?: string;
+  SENDGRID_API_KEY?: string;
+  SENDGRID_FROM_EMAIL?: string;
 }
 
 // Available themes for random selection
@@ -168,6 +170,47 @@ function generateId(): string {
   return crypto.randomUUID();
 }
 
+// Send email via SendGrid
+async function sendEmail(
+  env: Env,
+  to: string,
+  subject: string,
+  htmlContent: string,
+  textContent: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!env.SENDGRID_API_KEY || !env.SENDGRID_FROM_EMAIL) {
+    return { success: false, error: 'SendGrid not configured' };
+  }
+
+  try {
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.SENDGRID_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: to }] }],
+        from: { email: env.SENDGRID_FROM_EMAIL, name: 'LoveNotes' },
+        subject,
+        content: [
+          { type: 'text/plain', value: textContent },
+          { type: 'text/html', value: htmlContent },
+        ],
+      }),
+    });
+
+    if (response.ok || response.status === 202) {
+      return { success: true };
+    } else {
+      const error = await response.text();
+      return { success: false, error };
+    }
+  } catch (err) {
+    return { success: false, error: String(err) };
+  }
+}
+
 function getAuthToken(request: Request): string | null {
   // Check cookie first
   const cookieHeader = request.headers.get('Cookie');
@@ -222,6 +265,14 @@ export default {
           return jsonResponse({ error: 'Not available in production' }, 403, env);
         }
         return handleCreateTestUser(request, env);
+      }
+
+      // Test endpoint to trigger message send for a subscriber
+      if (url.pathname === '/api/test/send-message' && request.method === 'POST') {
+        if (env.ENVIRONMENT === 'production') {
+          return jsonResponse({ error: 'Not available in production' }, 403, env);
+        }
+        return handleTestSendMessage(request, env);
       }
 
       // Protected routes (auth required)
@@ -495,6 +546,112 @@ async function handleCreateTestUser(request: Request, env: Env): Promise<Respons
   }, 200, env);
 }
 
+// Test endpoint to manually trigger a message send
+async function handleTestSendMessage(request: Request, env: Env): Promise<Response> {
+  const body = await request.json() as { email?: string; subscriberId?: string };
+
+  // Find subscriber by email or ID
+  let subscriber;
+  if (body.subscriberId) {
+    subscriber = await env.DB.prepare(
+      'SELECT * FROM subscribers WHERE id = ?'
+    ).bind(body.subscriberId).first();
+  } else if (body.email) {
+    subscriber = await env.DB.prepare(
+      'SELECT * FROM subscribers WHERE email = ?'
+    ).bind(body.email).first();
+  } else {
+    return jsonResponse({ error: 'Provide email or subscriberId' }, 400, env);
+  }
+
+  if (!subscriber) {
+    return jsonResponse({ error: 'Subscriber not found' }, 404, env);
+  }
+
+  // Pick a random theme if subscriber has 'random' selected
+  let messageTheme = subscriber.theme as string;
+  if (messageTheme === 'random') {
+    messageTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
+  }
+
+  // Get a random message
+  const message = await env.DB.prepare(`
+    SELECT id, theme, content FROM messages
+    WHERE theme = ? AND occasion IS NULL
+    ORDER BY RANDOM()
+    LIMIT 1
+  `).bind(messageTheme).first();
+
+  if (!message) {
+    return jsonResponse({ error: 'No messages found' }, 404, env);
+  }
+
+  const content = (message.content as string).replace(/{wife_name}/g, subscriber.wife_name as string);
+
+  // Log the send
+  const sendId = generateId();
+  await env.DB.prepare(`
+    INSERT INTO send_log (id, subscriber_id, message_id, status)
+    VALUES (?, ?, ?, 'pending')
+  `).bind(sendId, subscriber.id, message.id).run();
+
+  // Try to send via email (since this is for testing)
+  if (env.SENDGRID_API_KEY && env.SENDGRID_FROM_EMAIL) {
+    const subject = `💕 Today's LoveNote for ${subscriber.wife_name}`;
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span style="font-size: 48px;">💕</span>
+          <h1 style="color: #e11d48; margin: 10px 0;">LoveNotes</h1>
+        </div>
+        <div style="background: linear-gradient(135deg, #fef2f2, #fdf4ff); padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+          <p style="font-size: 18px; line-height: 1.6; color: #374151; margin: 0;">
+            ${content}
+          </p>
+        </div>
+        <p style="color: #6b7280; font-size: 14px; text-align: center;">
+          Copy this message and send it to ${subscriber.wife_name} from your phone 📱
+        </p>
+        <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 20px;">
+          Theme: ${messageTheme} | This is a test message
+        </p>
+      </div>
+    `;
+    const textContent = `💕 LoveNotes\n\n${content}\n\nCopy this message and send it to ${subscriber.wife_name} from your phone.\n\nTheme: ${messageTheme}`;
+
+    const emailResult = await sendEmail(env, subscriber.email as string, subject, htmlContent, textContent);
+
+    if (emailResult.success) {
+      await env.DB.prepare(`UPDATE send_log SET status = 'sent' WHERE id = ?`).bind(sendId).run();
+      return jsonResponse({
+        success: true,
+        method: 'email',
+        to: subscriber.email,
+        theme: messageTheme,
+        content,
+      }, 200, env);
+    } else {
+      await env.DB.prepare(`UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?`)
+        .bind(emailResult.error || 'Unknown', sendId).run();
+      return jsonResponse({
+        success: false,
+        error: emailResult.error,
+        content, // Still return content so you can see what would have been sent
+      }, 500, env);
+    }
+  }
+
+  // No email configured - just return the message
+  await env.DB.prepare(`UPDATE send_log SET status = 'ready' WHERE id = ?`).bind(sendId).run();
+  return jsonResponse({
+    success: true,
+    method: 'none (no email/SMS configured)',
+    theme: messageTheme,
+    content,
+    note: 'Message logged but not sent - configure SENDGRID_API_KEY to send emails',
+  }, 200, env);
+}
+
 /**
  * Scheduled handler - runs daily to generate messages for all active subscribers
  */
@@ -616,7 +773,7 @@ async function handleScheduled(env: Env): Promise<void> {
         VALUES (?, ?)
       `).bind(subscriber.id, message.id).run();
 
-      // Send SMS via Twilio if configured
+      // Send via Twilio SMS if configured
       if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_PHONE_NUMBER) {
         try {
           const twilioResponse = await fetch(
@@ -641,12 +798,12 @@ async function handleScheduled(env: Env): Promise<void> {
             await env.DB.prepare(`
               UPDATE send_log SET status = 'sent', twilio_sid = ? WHERE id = ?
             `).bind(twilioResult.sid, sendId).run();
-            console.log(`Sent message to subscriber ${subscriber.id}`);
+            console.log(`SMS sent to subscriber ${subscriber.id}`);
           } else {
             await env.DB.prepare(`
               UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
             `).bind(twilioResult.error_message || 'Unknown error', sendId).run();
-            console.error(`Failed to send to ${subscriber.id}:`, twilioResult.error_message);
+            console.error(`SMS failed for ${subscriber.id}:`, twilioResult.error_message);
           }
         } catch (twilioError) {
           await env.DB.prepare(`
@@ -654,12 +811,57 @@ async function handleScheduled(env: Env): Promise<void> {
           `).bind(String(twilioError), sendId).run();
           console.error(`Twilio error for ${subscriber.id}:`, twilioError);
         }
-      } else {
-        // Twilio not configured - mark as ready for manual send
+      }
+      // Fallback to SendGrid email if Twilio not configured
+      else if (env.SENDGRID_API_KEY && env.SENDGRID_FROM_EMAIL) {
+        const subject = occasionType
+          ? `💕 Happy ${occasionType.charAt(0).toUpperCase() + occasionType.slice(1)}! A special LoveNote for ${subscriber.wife_name}`
+          : `💕 Today's LoveNote for ${subscriber.wife_name}`;
+
+        const htmlContent = `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <span style="font-size: 48px;">💕</span>
+              <h1 style="color: #e11d48; margin: 10px 0;">LoveNotes</h1>
+            </div>
+            <div style="background: linear-gradient(135deg, #fef2f2, #fdf4ff); padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+              <p style="font-size: 18px; line-height: 1.6; color: #374151; margin: 0;">
+                ${content}
+              </p>
+            </div>
+            <p style="color: #6b7280; font-size: 14px; text-align: center;">
+              Copy this message and send it to ${subscriber.wife_name} from your phone 📱
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+              <a href="https://app-lovenotes-nextjs.pages.dev/dashboard" style="color: #e11d48;">View Dashboard</a> |
+              <a href="mailto:support@lovenotes.app" style="color: #e11d48;">Unsubscribe</a>
+            </p>
+          </div>
+        `;
+
+        const textContent = `💕 LoveNotes\n\n${content}\n\nCopy this message and send it to ${subscriber.wife_name} from your phone.\n\nView Dashboard: https://app-lovenotes-nextjs.pages.dev/dashboard`;
+
+        const emailResult = await sendEmail(env, subscriber.email as string, subject, htmlContent, textContent);
+
+        if (emailResult.success) {
+          await env.DB.prepare(`
+            UPDATE send_log SET status = 'sent' WHERE id = ?
+          `).bind(sendId).run();
+          console.log(`Email sent to subscriber ${subscriber.id}`);
+        } else {
+          await env.DB.prepare(`
+            UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
+          `).bind(emailResult.error || 'Email failed', sendId).run();
+          console.error(`Email failed for ${subscriber.id}:`, emailResult.error);
+        }
+      }
+      // Neither configured - mark as ready for manual send
+      else {
         await env.DB.prepare(`
           UPDATE send_log SET status = 'ready' WHERE id = ?
         `).bind(sendId).run();
-        console.log(`Message queued for subscriber ${subscriber.id} (Twilio not configured)`);
+        console.log(`Message queued for subscriber ${subscriber.id} (no SMS/email configured)`);
       }
 
     } catch (err) {

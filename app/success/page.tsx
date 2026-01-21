@@ -54,8 +54,8 @@ function SuccessContent() {
                 <h3 className="font-semibold text-gray-900">Need help?</h3>
                 <p className="text-gray-600 text-sm">
                   Email us at{" "}
-                  <a href="mailto:support@lovenotes.app" className="text-rose-500 hover:underline">
-                    support@lovenotes.app
+                  <a href="mailto:support@sendmylove.app" className="text-rose-500 hover:underline">
+                    support@sendmylove.app
                   </a>{" "}
                   for any questions or to manage your subscription.
                 </p>

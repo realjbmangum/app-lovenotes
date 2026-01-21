@@ -10,7 +10,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "pages:build": "next build",
-    "pages:deploy": "npm run pages:build && wrangler pages deploy out --project-name=lovenotes"
+    "pages:deploy": "npm run pages:build && wrangler pages deploy out --project-name=app-lovenotes-nextjs --commit-dirty=true"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

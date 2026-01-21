@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS subscribers (
   email TEXT NOT NULL UNIQUE,
   phone TEXT NOT NULL,
   wife_name TEXT NOT NULL,
+  nickname TEXT,
   theme TEXT DEFAULT 'romantic',
   frequency TEXT DEFAULT 'daily',
   anniversary_date TEXT,

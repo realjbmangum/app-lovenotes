@@ -21,22 +21,24 @@ import {
   CreditCard,
   Users,
   ArrowRight,
-  Phone,
   Mail,
   AlertCircle,
   Menu,
   X,
 } from "lucide-react"
 import { submitSignup, formatPhoneNumber, validatePhoneNumber, validateEmail } from "@/lib/api"
+import Link from "next/link"
 
 export default function LandingPage() {
   const [formData, setFormData] = useState({
     email: "",
     phoneNumber: "",
     wifeName: "",
+    nickname: "",
     contentTheme: "random",
     frequency: "daily",
     anniversaryDate: "",
+    wifeBirthday: "",
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -101,18 +103,17 @@ export default function LandingPage() {
       email: formData.email,
       phone: formData.phoneNumber.replace(/\D/g, ''), // Send only digits
       wifeName: formData.wifeName,
+      nickname: formData.nickname || undefined,
       theme: formData.contentTheme,
       frequency: formData.frequency,
       anniversaryDate: formData.anniversaryDate || undefined,
+      wifeBirthday: formData.wifeBirthday || undefined,
     })
 
     if (response.success && response.checkoutUrl) {
-      // Store subscriber ID for dashboard access
-      if (response.subscriberId) {
-        localStorage.setItem('lovenotes_subscriber_id', response.subscriberId)
-      }
+      // Auth is handled via httpOnly cookie - no localStorage needed
       // Redirect to success page (will be Stripe Checkout when integrated)
-      window.location.href = `${response.checkoutUrl}&id=${response.subscriberId}`
+      window.location.href = response.checkoutUrl
     } else {
       setSubmitError(response.error || "Something went wrong. Please try again.")
       setIsSubmitting(false)
@@ -127,12 +128,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-orange-50 to-purple-50">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-rose-100">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-rose-500" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-rose-500 to-purple-600 bg-clip-text text-transparent">
-              LoveNotes
-            </span>
+        <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <img src="/sendmylove.app.png" alt="SendMyLove" className="h-14 md:h-16" />
           </div>
           <nav className="hidden md:flex items-center space-x-6">
             <button
@@ -200,108 +198,95 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200">
-                  <Heart className="h-3 w-3 mr-1" />
-                  Trusted by loving husbands everywhere
-                </Badge>
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  Never miss a moment to{" "}
-                  <span className="bg-gradient-to-r from-rose-500 to-purple-600 bg-clip-text text-transparent">
-                    show her you care
+      <section className="py-16 md:py-24 px-4">
+        <div className="container mx-auto max-w-5xl text-center">
+          {/* Big centered logo */}
+          <div className="flex justify-center mb-8">
+            <img src="/sendmylove.app.png" alt="SendMyLove" className="h-32 md:h-44 lg:h-52" />
+          </div>
+
+          <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200 mb-6">
+            <Heart className="h-3 w-3 mr-1" />
+            Trusted by loving husbands everywhere
+          </Badge>
+
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+            Never miss a moment to{" "}
+            <span className="bg-gradient-to-r from-rose-500 to-purple-600 bg-clip-text text-transparent">
+              show her you care
+            </span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto">
+            Daily message suggestions sent to your phone. Copy, customize, send.
+            She'll love you for it.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Button
+              size="lg"
+              onClick={() => scrollToSection("signup")}
+              className="bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-lg px-10 py-7 group"
+            >
+              Start Making Her Smile - $5/month
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => scrollToSection("how-it-works")}
+              className="border-rose-200 text-rose-600 hover:bg-rose-50 text-lg px-10 py-7"
+            >
+              See How It Works
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 mb-12">
+            <div className="flex items-center">
+              <Check className="h-5 w-5 text-green-500 mr-2" />
+              7-day free trial
+            </div>
+            <div className="flex items-center">
+              <Check className="h-5 w-5 text-green-500 mr-2" />
+              Cancel anytime
+            </div>
+            <div className="flex items-center">
+              <Check className="h-5 w-5 text-green-500 mr-2" />
+              30-day guarantee
+            </div>
+          </div>
+
+          {/* Message Preview Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {Object.entries(messageExamples).map(([theme, message]) => (
+              <div
+                key={theme}
+                className={`p-5 rounded-2xl text-left transition-all hover:scale-105 cursor-pointer ${
+                  currentTheme === theme
+                    ? 'ring-2 ring-rose-500 ring-offset-2'
+                    : ''
+                } ${
+                  theme === 'romantic' ? 'bg-gradient-to-br from-rose-100 to-pink-100' :
+                  theme === 'funny' ? 'bg-gradient-to-br from-amber-100 to-yellow-100' :
+                  theme === 'appreciative' ? 'bg-gradient-to-br from-green-100 to-emerald-100' :
+                  'bg-gradient-to-br from-purple-100 to-indigo-100'
+                }`}
+                onClick={() => setCurrentTheme(theme)}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  {theme === 'romantic' && <Heart className="h-4 w-4 text-rose-500" />}
+                  {theme === 'funny' && <Sparkles className="h-4 w-4 text-amber-500" />}
+                  {theme === 'appreciative' && <Heart className="h-4 w-4 text-green-500" />}
+                  {theme === 'encouraging' && <Star className="h-4 w-4 text-purple-500" />}
+                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                    {theme}
                   </span>
-                </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
-                  Get personalized message suggestions sent to your phone. Copy, customize, and send sweet texts that
-                  will make her day.
+                </div>
+                <p className="text-sm text-gray-700 line-clamp-3">
+                  {message}
                 </p>
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  size="lg"
-                  onClick={() => scrollToSection("signup")}
-                  className="bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-lg px-8 py-6 group"
-                >
-                  Start Making Her Smile - $5/month
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => scrollToSection("how-it-works")}
-                  className="border-rose-200 text-rose-600 hover:bg-rose-50 text-lg px-8 py-6"
-                >
-                  See How It Works
-                </Button>
-              </div>
-
-              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-1" />
-                  7-day free trial
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-1" />
-                  Cancel anytime
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-1" />
-                  30-day guarantee
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="relative mx-auto w-80 h-96 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-2 shadow-2xl">
-                <div className="w-full h-full bg-black rounded-2xl overflow-hidden relative">
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl"></div>
-                  <div className="p-4 pt-8 h-full flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center">
-                          <Heart className="h-4 w-4 text-white" />
-                        </div>
-                        <span className="text-white font-medium">LoveNotes</span>
-                      </div>
-                      <span className="text-gray-400 text-sm">9:42 AM</span>
-                    </div>
-
-                    <div className="flex-1 space-y-4">
-                      <div className="bg-rose-500 rounded-2xl rounded-bl-md p-4 ml-8">
-                        <p className="text-white text-sm leading-relaxed">
-                          {messageExamples[currentTheme as keyof typeof messageExamples]}
-                        </p>
-                      </div>
-
-                      <div className="flex justify-center">
-                        <Button
-                          size="sm"
-                          className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
-                          onClick={() => {
-                            const themes = Object.keys(messageExamples)
-                            const currentIndex = themes.indexOf(currentTheme)
-                            const nextIndex = (currentIndex + 1) % themes.length
-                            setCurrentTheme(themes[nextIndex])
-                          }}
-                        >
-                          <Sparkles className="h-3 w-3 mr-1" />
-                          Try Different Style
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute -top-4 -right-4 bg-amber-300 rounded-full p-3 shadow-lg animate-pulse">
-                <Heart className="h-6 w-6 text-amber-700" />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -434,7 +419,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-2xl">LoveNotes Premium</CardTitle>
+              <CardTitle className="text-2xl">SendMyLove Premium</CardTitle>
               <div className="text-4xl font-bold text-rose-600">
                 $5<span className="text-lg text-gray-500">/month</span>
               </div>
@@ -486,7 +471,7 @@ export default function LandingPage() {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Real Stories from Real Husbands</h2>
-            <p className="text-xl text-gray-600">See how LoveNotes is transforming relationships</p>
+            <p className="text-xl text-gray-600">See how SendMyLove is transforming relationships</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -520,7 +505,7 @@ export default function LandingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  "I was never good with words, but LoveNotes changed that. Emma lights up every time she gets one of
+                  "I was never good with words, but SendMyLove changed that. Emma lights up every time she gets one of
                   'my' messages. It's like having a relationship coach in my pocket."
                 </p>
               </CardContent>
@@ -538,7 +523,7 @@ export default function LandingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  "After 12 years, it's easy to get comfortable and forget the little things. LoveNotes brought back
+                  "After 12 years, it's easy to get comfortable and forget the little things. SendMyLove brought back
                   that spark and reminded me why I fell in love with Lisa."
                 </p>
               </CardContent>
@@ -552,7 +537,7 @@ export default function LandingPage() {
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl text-gray-600">Everything you need to know about LoveNotes</p>
+            <p className="text-xl text-gray-600">Everything you need to know about SendMyLove</p>
           </div>
 
           <Accordion type="single" collapsible className="space-y-4">
@@ -636,9 +621,11 @@ export default function LandingPage() {
                         if (errors.email) setErrors({ ...errors, email: "" })
                       }}
                       className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+                      aria-invalid={errors.email ? "true" : "false"}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                     />
                     {errors.email && (
-                      <p className="text-sm text-red-500">{errors.email}</p>
+                      <p id="email-error" className="text-sm text-red-500" role="alert">{errors.email}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -650,28 +637,45 @@ export default function LandingPage() {
                       value={formData.phoneNumber}
                       onChange={handlePhoneChange}
                       className={errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
+                      aria-invalid={errors.phone ? "true" : "false"}
+                      aria-describedby={errors.phone ? "phone-error" : undefined}
                     />
                     {errors.phone && (
-                      <p className="text-sm text-red-500">{errors.phone}</p>
+                      <p id="phone-error" className="text-sm text-red-500" role="alert">{errors.phone}</p>
                     )}
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="wifeName">Your Wife's Name</Label>
-                  <Input
-                    id="wifeName"
-                    placeholder="Sarah"
-                    value={formData.wifeName}
-                    onChange={(e) => {
-                      setFormData({ ...formData, wifeName: e.target.value })
-                      if (errors.wifeName) setErrors({ ...errors, wifeName: "" })
-                    }}
-                    className={errors.wifeName ? "border-red-500 focus-visible:ring-red-500" : ""}
-                  />
-                  {errors.wifeName && (
-                    <p className="text-sm text-red-500">{errors.wifeName}</p>
-                  )}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="wifeName">Your Wife's Name</Label>
+                    <Input
+                      id="wifeName"
+                      placeholder="Sarah"
+                      value={formData.wifeName}
+                      onChange={(e) => {
+                        setFormData({ ...formData, wifeName: e.target.value })
+                        if (errors.wifeName) setErrors({ ...errors, wifeName: "" })
+                      }}
+                      className={errors.wifeName ? "border-red-500 focus-visible:ring-red-500" : ""}
+                      aria-invalid={errors.wifeName ? "true" : "false"}
+                      aria-describedby={errors.wifeName ? "wifeName-error" : undefined}
+                    />
+                    {errors.wifeName && (
+                      <p id="wifeName-error" className="text-sm text-red-500" role="alert">{errors.wifeName}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nickname">Pet Name / Nickname</Label>
+                    <Input
+                      id="nickname"
+                      placeholder="Babe, Honey, Love..."
+                      value={formData.nickname}
+                      onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                      aria-describedby="nickname-hint"
+                    />
+                    <p id="nickname-hint" className="text-xs text-gray-500">Used in messages instead of her real name</p>
+                  </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
@@ -690,6 +694,7 @@ export default function LandingPage() {
                         <SelectItem value="funny">Funny</SelectItem>
                         <SelectItem value="appreciative">Appreciative</SelectItem>
                         <SelectItem value="encouraging">Encouraging</SelectItem>
+                        <SelectItem value="spicy">Spicy</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -711,14 +716,27 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="anniversary">Anniversary Date (Optional)</Label>
-                  <Input
-                    id="anniversary"
-                    type="date"
-                    value={formData.anniversaryDate}
-                    onChange={(e) => setFormData({ ...formData, anniversaryDate: e.target.value })}
-                  />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="anniversary">Anniversary Date (Optional)</Label>
+                    <Input
+                      id="anniversary"
+                      type="date"
+                      value={formData.anniversaryDate}
+                      onChange={(e) => setFormData({ ...formData, anniversaryDate: e.target.value })}
+                    />
+                    <p className="text-xs text-gray-500">We'll send a special message</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="wifeBirthday">Her Birthday (Optional)</Label>
+                    <Input
+                      id="wifeBirthday"
+                      type="date"
+                      value={formData.wifeBirthday}
+                      onChange={(e) => setFormData({ ...formData, wifeBirthday: e.target.value })}
+                    />
+                    <p className="text-xs text-gray-500">We'll send a special message</p>
+                  </div>
                 </div>
 
                 <Button
@@ -745,9 +763,8 @@ export default function LandingPage() {
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Heart className="h-8 w-8 text-rose-500" />
-                <span className="text-2xl font-bold">LoveNotes</span>
+              <div className="flex items-center">
+                <img src="/sendmylove.app.png" alt="SendMyLove" className="h-16 md:h-20 brightness-0 invert" />
               </div>
               <p className="text-gray-300">
                 Helping husbands stay connected with their wives through personalized daily messages.
@@ -758,24 +775,24 @@ export default function LandingPage() {
               <h4 className="font-semibold">Product</h4>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button onClick={() => scrollToSection("how-it-works")} className="hover:text-white transition-colors">
                     How It Works
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button onClick={() => scrollToSection("pricing")} className="hover:text-white transition-colors">
                     Pricing
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Features
-                  </a>
+                  <button onClick={() => scrollToSection("signup")} className="hover:text-white transition-colors">
+                    Get Started
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <button onClick={() => scrollToSection("testimonials")} className="hover:text-white transition-colors">
                     Reviews
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -784,24 +801,19 @@ export default function LandingPage() {
               <h4 className="font-semibold">Support</h4>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="mailto:support@sendmylove.app" className="hover:text-white transition-colors">
                     Contact Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link href="/privacy" className="hover:text-white transition-colors">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link href="/terms" className="hover:text-white transition-colors">
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -826,13 +838,11 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-300 text-sm">© {new Date().getFullYear()} LoveNotes. All rights reserved.</p>
+            <p className="text-gray-300 text-sm">© {new Date().getFullYear()} SendMyLove. All rights reserved.</p>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
-              <a href="mailto:support@lovenotes.com" className="text-gray-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md">
+              <a href="mailto:support@sendmylove.app" className="text-gray-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md flex items-center gap-2">
                 <Mail className="h-5 w-5" />
-              </a>
-              <a href="tel:+1234567890" className="text-gray-300 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md">
-                <Phone className="h-5 w-5" />
+                <span className="text-sm">support@sendmylove.app</span>
               </a>
             </div>
           </div>

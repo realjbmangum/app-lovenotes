@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Copy, Check, RefreshCw, Sparkles, Smile, HandHeart, Lightbulb } from "lucide-react"
+import { Heart, Copy, Check, RefreshCw, Sparkles, Smile, HandHeart, Lightbulb, Flame } from "lucide-react"
 import Link from "next/link"
 
 interface Message {
@@ -37,12 +37,13 @@ const authFetch = (url: string, options: RequestInit = {}) => {
   })
 }
 
-// Themes match database: romantic (850), funny (400), appreciative (410), encouraging (400)
+// Themes match database: romantic (850), funny (400), appreciative (410), encouraging (400), spicy (315)
 const themes = [
   { id: 'romantic', label: 'Romantic', icon: Heart, color: 'bg-rose-500 hover:bg-rose-600' },
   { id: 'funny', label: 'Funny', icon: Smile, color: 'bg-amber-500 hover:bg-amber-600' },
   { id: 'appreciative', label: 'Grateful', icon: HandHeart, color: 'bg-green-500 hover:bg-green-600' },
   { id: 'encouraging', label: 'Uplifting', icon: Lightbulb, color: 'bg-purple-500 hover:bg-purple-600' },
+  { id: 'spicy', label: 'Spicy', icon: Flame, color: 'bg-orange-500 hover:bg-orange-600' },
 ]
 
 // Demo messages for screenshot/preview mode (match database themes)
@@ -51,6 +52,7 @@ const demoMessages: Record<string, string> = {
   funny: "Hey gorgeous! 😄 I just realized I'm married to someone way out of my league... and I'm totally okay with that! Hope your day is as awesome as you are!",
   appreciative: "Thank you for being the incredible woman you are 💕 Your strength, kindness, and love make our home a paradise. I'm so grateful for you!",
   encouraging: "You've got this, superwoman! 💪 Whatever today brings, remember that I believe in you completely. You're stronger than you know! ✨",
+  spicy: "Good morning, gorgeous. I woke up thinking about last night... and I can't wait for tonight. 🔥",
 }
 
 function DashboardContent() {
@@ -139,8 +141,8 @@ function DashboardContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="animate-pulse">
-          <Heart className="h-12 w-12 text-rose-400" />
+        <div className="animate-pulse flex flex-col items-center">
+          <img src="/sendmylove.app.png" alt="SendMyLove" className="h-28 md:h-36 brightness-0 invert" />
         </div>
       </div>
     )
@@ -151,6 +153,7 @@ function DashboardContent() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
         <Card className="max-w-md w-full bg-slate-800 border-slate-700">
           <CardHeader className="text-center">
+            <img src="/sendmylove.app.png" alt="SendMyLove" className="h-24 mx-auto mb-4 brightness-0 invert" />
             <CardTitle className="text-red-400">Oops!</CardTitle>
             <p className="text-slate-400">{error || 'Something went wrong'}</p>
           </CardHeader>
@@ -165,32 +168,26 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-4 py-4">
-      {/* Navigation Header */}
-      <header className="container mx-auto max-w-2xl mb-6">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-md px-2 py-1">
-            <Heart className="h-5 w-5 text-rose-500" />
-            <span className="text-sm font-medium">Home</span>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-4 py-6">
+      {/* Header with big centered logo */}
+      <header className="container mx-auto max-w-2xl mb-8">
+        <div className="flex flex-col items-center gap-4">
+          {/* Big logo - center stage */}
+          <Link href="/">
+            <img src="/sendmylove.app.png" alt="SendMyLove" className="h-28 md:h-36 brightness-0 invert" />
           </Link>
-          <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-rose-500" />
-            <span className="text-xl font-bold text-white">LoveNotes</span>
-          </div>
-          <div className="w-16" /> {/* Spacer for centering */}
+
+          {/* Subtitle with wife's name */}
+          <p className="text-slate-400 text-lg">
+            Pick a style, get a message for <span className="text-rose-400 font-medium">{subscriber.wife_name}</span>
+          </p>
         </div>
       </header>
 
       <div className="container mx-auto max-w-2xl">
-        {/* Title */}
-        <div className="text-center mb-8">
-          <p className="text-slate-400">
-            Pick a style, get a message for <span className="text-rose-400 font-medium">{subscriber.wife_name}</span>
-          </p>
-        </div>
 
         {/* Theme Selector Grid */}
-        <div className="grid grid-cols-4 gap-2 mb-6">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-6">
           {themes.map((theme) => {
             const Icon = theme.icon
             const isSelected = selectedTheme === theme.id
@@ -264,9 +261,14 @@ function DashboardContent() {
         </Card>
 
         {/* Footer */}
-        <p className="text-center text-sm text-slate-500">
-          Copy the message and send it to {subscriber.wife_name} from your phone
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-sm text-slate-500">
+            Copy the message and send it to {subscriber.wife_name} from your phone
+          </p>
+          <Link href="/" className="text-sm text-slate-600 hover:text-slate-400 transition-colors">
+            ← Back to home
+          </Link>
+        </div>
       </div>
     </div>
   )
@@ -276,8 +278,8 @@ export default function DashboardPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="animate-pulse">
-          <Heart className="h-12 w-12 text-rose-400" />
+        <div className="animate-pulse flex flex-col items-center">
+          <img src="/sendmylove.app.png" alt="SendMyLove" className="h-28 md:h-36 brightness-0 invert" />
         </div>
       </div>
     }>

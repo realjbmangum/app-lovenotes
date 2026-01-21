@@ -9,7 +9,8 @@ database_id = "98e6e4fe-c324-4337-b06f-90356b027be9"
 
 [vars]
 ENVIRONMENT = "development"
-ALLOWED_ORIGIN = "http://localhost:3000"
+ALLOWED_ORIGIN = "https://sendmylove.app"
+SENDGRID_FROM_EMAIL = "hello@sendmylove.app"
 
 # JWT_SECRET should be set via wrangler secret for production:
 # wrangler secret put JWT_SECRET
@@ -24,7 +25,7 @@ crons = ["0 13 * * *"]
 
 # Production environment
 [env.production]
-vars = { ENVIRONMENT = "production", ALLOWED_ORIGIN = "https://lovenotes.app" }
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGIN = "https://sendmylove.app" }
 
 # Production also needs the cron trigger
 [env.production.triggers]

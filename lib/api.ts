@@ -13,9 +13,11 @@ export interface SignupData {
   email: string;
   phone: string;
   wifeName: string;
+  nickname?: string;
   theme: string;
   frequency: string;
   anniversaryDate?: string;
+  wifeBirthday?: string;
 }
 
 export interface SignupResponse {
@@ -32,6 +34,7 @@ export async function submitSignup(data: SignupData): Promise<SignupResponse> {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Required to receive cross-origin cookies
       body: JSON.stringify(data),
     });
 

@@ -127,3 +127,65 @@
 - [ ] Story 5: SMS Sender (Twilio)
 
 ---
+
+### 2026-01-20 - Production Deployment & Email Integration
+
+**Completed:**
+- Fixed message style mismatch (signup now matches dashboard themes)
+- Added "Random" theme option - picks different style each day
+- Implemented daily scheduled worker (cron at 8am ET)
+- Added anniversary/birthday checking in scheduled handler
+- Fixed deployment size issue (static export to `out/` folder - 1.6MB)
+- Deployed Worker to Cloudflare: `https://lovenotes-api.bmangum1.workers.dev`
+- Fixed CORS for all Pages domains (dynamic origin matching)
+- Added SendGrid email integration as SMS fallback
+- Created test endpoint: `POST /api/test/send-message`
+- Successful end-to-end signup test on live site
+
+**Deployment:**
+- Worker URL: `https://lovenotes-api.bmangum1.workers.dev`
+- Pages URL: `https://app-lovenotes-nextjs.pages.dev`
+- D1 Database: `lovenotes-db` (bound to worker)
+
+**Files Changed:**
+- `app/page.tsx` - Added "Random" theme option as default
+- `app/dashboard/page.tsx` - Aligned themes with database (4 themes not 8)
+- `worker/index.ts` - SendGrid email, scheduled handler, anniversary logic, CORS fix
+- `wrangler.toml` - Cron trigger, SendGrid secrets reminder
+- `next.config.mjs` - Static export enabled (`output: 'export'`)
+- `lib/api.ts` - Production API URL auto-detection
+- `package.json` - Added pages:build and pages:deploy scripts
+
+**Environment Variables (Cloudflare Worker):**
+- `JWT_SECRET` - ✅ Set
+- `SENDGRID_API_KEY` - ⏳ Pending (user creating new key for LoveNotes)
+- `SENDGRID_FROM_EMAIL` - ⏳ Pending
+- `TWILIO_*` - Optional (for SMS)
+
+**Message Flow:**
+1. Daily cron at 8am ET (13:00 UTC)
+2. Check for anniversary/birthday → send special message
+3. Otherwise pick random theme for variety
+4. Send via: Twilio SMS > SendGrid Email > Log only
+
+**Built MCP for Domain Search:**
+- Created `/Users/jbm/new-project/mcp-cloudflare-domains`
+- Tools: check_domain, check_domains, search_domains
+- Added to `~/.claude/settings.json`
+- Uses Cloudflare Registrar API
+
+**Decisions:**
+- "Random" is now default theme (more variety for users)
+- Static export for Cloudflare Pages (simpler, smaller)
+- Email as fallback until Twilio configured
+- Dashboard themes: romantic, funny, appreciative, encouraging (matches DB)
+
+**Next Steps:**
+- [ ] Set up SendGrid API key for LoveNotes domain
+- [ ] Authenticate lovenotes domain in SendGrid (or pick domain name first)
+- [ ] Test email sending via `/api/test/send-message`
+- [ ] Pick and register domain name for LoveNotes
+- [ ] Story 2: Stripe Checkout Integration
+- [ ] Restart Claude Code to use new domain search MCP
+
+---

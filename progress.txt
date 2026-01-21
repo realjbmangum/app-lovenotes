@@ -5,10 +5,14 @@
 - Phone numbers: Format with `formatPhoneNumber()`, validate with `validatePhoneNumber()`, store as 10 digits only
 - Form validation: Manual validation in `validateForm()`, clear errors on input change
 - API calls: Use `lib/api.ts` client, returns `{ success, checkoutUrl?, error? }`
-- **Auth**: JWT in httpOnly cookie (`lovenotes_auth`), 30-day expiry
+- **Auth**: JWT in httpOnly cookie (`lovenotes_auth`), 30-day expiry, requires `JWT_SECRET` env var
 - **Protected endpoints**: `/api/subscriber`, `/api/messages/next` require auth cookie
-- **CORS**: Specific origin only (localhost:3000 in dev, lovenotes.app in prod)
+- **CORS**: Pass `requestOrigin` parameter (no global state), allowed origins in `ALLOWED_ORIGINS` array
 - **Testing**: Use `npm test` (vitest), test files named `*.test.ts`
+- **Email security**: Always use `escapeHtml()` for user content in email templates
+- **Form accessibility**: Use `aria-describedby` linking errors, `aria-invalid`, `role="alert"`
+- **Themes**: romantic, funny, appreciative, encouraging, spicy (5 total)
+- **Occasions**: anniversary, birthday, valentines, christmas, mothers_day, thanksgiving, new_years
 
 ---
 
@@ -187,5 +191,66 @@
 - [ ] Pick and register domain name for LoveNotes
 - [ ] Story 2: Stripe Checkout Integration
 - [ ] Restart Claude Code to use new domain search MCP
+
+---
+
+### 2026-01-21 - Security Audit & Design Fixes
+
+**Completed:**
+- Ran full security review (C+ grade → fixed all critical/high issues)
+- Ran design review and fixed accessibility issues
+- Added Privacy Policy and Terms of Service pages
+- Added 315 spicy theme messages
+- Added holiday detection for occasion emails
+- Added birthday field to signup form
+
+**Security Fixes:**
+1. **JWT secret fallback removed** (Critical) - No longer falls back to hardcoded dev secret
+2. **JWT algorithm validation** (Critical) - Rejects tokens with unexpected algorithms
+3. **CORS refactored** (Critical) - Eliminated mutable global state, pass origin as parameter
+4. **Email enumeration fixed** (High) - Generic error "Unable to create account" instead of "Email already registered"
+5. **localStorage removed** (High) - No longer stores subscriberId, auth uses httpOnly cookie only
+6. **HTML injection fixed** (Medium) - Added `escapeHtml()` for all user content in emails
+
+**Design/Accessibility Fixes:**
+1. Updated metadata from "LoveNotes" to "SendMyLove"
+2. Added `aria-describedby`, `aria-invalid`, `role="alert"` to form errors
+3. Message cards now responsive: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`
+4. Dashboard theme buttons responsive: `grid-cols-3 sm:grid-cols-5`
+
+**New Features:**
+- Privacy Policy page (`/privacy`)
+- Terms of Service page (`/terms`)
+- 315 spicy theme messages (R-rated, not X-rated)
+- Spicy theme in dashboard and signup form
+- Holiday detection: New Year's, Valentine's, Mother's Day, Thanksgiving, Christmas
+- Wife's birthday field with special messages
+
+**Files Changed:**
+- `worker/index.ts` - Security fixes, HTML escaping, requestOrigin parameter
+- `app/layout.tsx` - Updated metadata title
+- `app/page.tsx` - Accessibility fixes, removed localStorage, responsive grid
+- `app/dashboard/page.tsx` - Responsive theme buttons
+- `app/privacy/page.tsx` - New Privacy Policy page
+- `app/terms/page.tsx` - New Terms of Service page
+- `data/messages/spicy.json` - 315 spicy messages
+- `lib/api.ts` - Added wifeBirthday field
+
+**Message Count (Updated):**
+- Romantic: 850
+- Funny: 400
+- Appreciative: 410
+- Encouraging: 400
+- Spicy: 315
+- Occasions: 140
+- **Total: 2,515 messages**
+
+**Commit:** `9e25d49` - fix(security): Address critical vulnerabilities and improve accessibility
+
+**Next Steps:**
+- [ ] Set up Stripe Checkout for payments
+- [ ] Add Twilio for SMS delivery
+- [ ] Consider rate limiting (medium priority)
+- [ ] Add login flow for returning users
 
 ---

@@ -955,17 +955,22 @@ async function handleScheduled(env: Env): Promise<void> {
   const today = new Date();
   const todayMMDD = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  // Get all active subscribers who should receive messages today
+  // Get all subscribers who should receive messages today:
+  // - 'active' status (paid subscribers)
+  // - 'trial' status AND within 7-day trial period
   const subscribers = await env.DB.prepare(`
-    SELECT id, email, phone, wife_name, nickname, theme, frequency, anniversary_date, wife_birthday
+    SELECT id, email, phone, wife_name, nickname, theme, frequency, anniversary_date, wife_birthday, status, created_at
     FROM subscribers
-    WHERE status IN ('active', 'trial')
+    WHERE status = 'active'
+       OR (status = 'trial' AND created_at > datetime('now', '-7 days'))
   `).all();
 
   if (!subscribers.results || subscribers.results.length === 0) {
-    console.log('No active subscribers found');
+    console.log('No eligible subscribers found (active or within trial period)');
     return;
   }
+
+  console.log(`Found ${subscribers.results.length} eligible subscribers`);
 
   for (const subscriber of subscribers.results) {
     try {

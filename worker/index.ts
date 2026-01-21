@@ -1261,6 +1261,7 @@ async function handleCreateCheckoutSession(
         mode: 'subscription',
         success_url: successUrl,
         cancel_url: cancelUrl,
+        payment_method_collection: 'always', // Require card even during trial
         'subscription_data[trial_period_days]': '7',
         'subscription_data[metadata][subscriber_id]': subscriberId,
       }).toString(),

@@ -576,10 +576,76 @@ async function handleSignup(request: Request, env: Env, requestOrigin: string): 
     }
   }
 
+  // Create Stripe Checkout session if Stripe is configured
+  if (env.STRIPE_SECRET_KEY && env.STRIPE_PRICE_ID) {
+    try {
+      // Create Stripe customer
+      const customerResponse = await fetch('https://api.stripe.com/v1/customers', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          email: body.email,
+          'metadata[subscriber_id]': id,
+        }).toString(),
+      });
+
+      const customerData = await customerResponse.json() as { id?: string; error?: { message: string } };
+
+      if (customerResponse.ok && customerData.id) {
+        // Save customer ID
+        await env.DB.prepare(
+          'UPDATE subscribers SET stripe_customer_id = ? WHERE id = ?'
+        ).bind(customerData.id, id).run();
+
+        // Create Checkout session
+        const stripeSuccessUrl = `${env.ALLOWED_ORIGIN}/success?session_id={CHECKOUT_SESSION_ID}&name=${encodeURIComponent(sanitizedWifeName)}`;
+        const cancelUrl = `${env.ALLOWED_ORIGIN}/?canceled=true`;
+
+        const sessionResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: customerData.id,
+            'line_items[0][price]': env.STRIPE_PRICE_ID,
+            'line_items[0][quantity]': '1',
+            mode: 'subscription',
+            success_url: stripeSuccessUrl,
+            cancel_url: cancelUrl,
+            payment_method_collection: 'always',
+            'subscription_data[trial_period_days]': '7',
+            'subscription_data[metadata][subscriber_id]': id,
+          }).toString(),
+        });
+
+        const sessionData = await sessionResponse.json() as { id?: string; url?: string; error?: { message: string } };
+
+        if (sessionResponse.ok && sessionData.url) {
+          // Return Stripe checkout URL
+          return jsonResponse({
+            success: true,
+            checkoutUrl: sessionData.url,
+          }, 200, env, [cookieOptions], requestOrigin);
+        } else {
+          console.error('Stripe session creation failed:', sessionData);
+        }
+      } else {
+        console.error('Stripe customer creation failed:', customerData);
+      }
+    } catch (stripeError) {
+      console.error('Stripe error:', stripeError);
+    }
+  }
+
+  // Fallback: No Stripe or Stripe failed - return success page URL
   return jsonResponse({
     success: true,
     checkoutUrl: successUrl,
-    // Note: subscriberId removed from response for security (use cookie auth instead)
   }, 200, env, [cookieOptions], requestOrigin);
 }
 

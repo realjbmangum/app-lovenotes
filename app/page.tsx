@@ -26,7 +26,7 @@ import {
   Menu,
   X,
 } from "lucide-react"
-import { submitSignup, createCheckoutSession, formatPhoneNumber, validatePhoneNumber, validateEmail } from "@/lib/api"
+import { submitSignup, formatPhoneNumber, validatePhoneNumber, validateEmail } from "@/lib/api"
 import Link from "next/link"
 
 export default function LandingPage() {
@@ -110,19 +110,9 @@ export default function LandingPage() {
       wifeBirthday: formData.wifeBirthday || undefined,
     })
 
-    if (response.success) {
-      // Signup successful - now create Stripe Checkout session
-      const checkoutResponse = await createCheckoutSession()
-
-      if (checkoutResponse.success && checkoutResponse.checkoutUrl) {
-        // Redirect to Stripe Checkout
-        window.location.href = checkoutResponse.checkoutUrl
-      } else {
-        // Stripe failed - still send to success page (they get 7-day trial)
-        // They can subscribe later from the dashboard
-        console.error('Checkout session failed:', checkoutResponse.error)
-        window.location.href = `/success?name=${encodeURIComponent(formData.wifeName)}`
-      }
+    if (response.success && response.checkoutUrl) {
+      // Redirect to Stripe Checkout (or success page if Stripe not configured)
+      window.location.href = response.checkoutUrl
     } else {
       setSubmitError(response.error || "Something went wrong. Please try again.")
       setIsSubmitting(false)

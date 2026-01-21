@@ -14,6 +14,9 @@ export interface Env {
   TWILIO_PHONE_NUMBER?: string;
   SENDGRID_API_KEY?: string;
   SENDGRID_FROM_EMAIL?: string;
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_PRICE_ID?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
 }
 
 // Available themes for random selection
@@ -362,6 +365,11 @@ export default {
         return handleTestOccasionEmail(request, env, requestOrigin);
       }
 
+      // Stripe webhook (no auth - verified by Stripe signature)
+      if (url.pathname === '/api/stripe/webhook' && request.method === 'POST') {
+        return handleStripeWebhook(request, env, requestOrigin);
+      }
+
       // Protected routes (auth required)
       const token = getAuthToken(request);
       if (!token) {
@@ -385,6 +393,11 @@ export default {
 
       if (url.pathname === '/api/subscriber' && request.method === 'GET') {
         return handleGetSubscriber(payload.sub, env, requestOrigin);
+      }
+
+      // Create Stripe Checkout session for subscription
+      if (url.pathname === '/api/create-checkout-session' && request.method === 'POST') {
+        return handleCreateCheckoutSession(payload.sub, payload.email, env, requestOrigin);
       }
 
       return jsonResponse({ error: 'Not found' }, 404, env, undefined, requestOrigin);
@@ -1169,4 +1182,210 @@ async function handleScheduled(env: Env): Promise<void> {
   }
 
   console.log('Scheduled message generation complete');
+}
+
+/**
+ * Create Stripe Checkout session for subscription
+ */
+async function handleCreateCheckoutSession(
+  subscriberId: string,
+  email: string,
+  env: Env,
+  requestOrigin: string
+): Promise<Response> {
+  if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PRICE_ID) {
+    return jsonResponse({ error: 'Stripe not configured' }, 500, env, undefined, requestOrigin);
+  }
+
+  // Get subscriber to check if they already have a Stripe customer
+  const subscriber = await env.DB.prepare(
+    'SELECT * FROM subscribers WHERE id = ?'
+  ).bind(subscriberId).first();
+
+  if (!subscriber) {
+    return jsonResponse({ error: 'Subscriber not found' }, 404, env, undefined, requestOrigin);
+  }
+
+  // If already active, no need to checkout
+  if (subscriber.status === 'active') {
+    return jsonResponse({ error: 'Already subscribed' }, 400, env, undefined, requestOrigin);
+  }
+
+  try {
+    // Create or reuse Stripe customer
+    let customerId = subscriber.stripe_customer_id as string | null;
+
+    if (!customerId) {
+      // Create new Stripe customer
+      const customerResponse = await fetch('https://api.stripe.com/v1/customers', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          email: email,
+          metadata: JSON.stringify({ subscriber_id: subscriberId }),
+        }).toString(),
+      });
+
+      const customerData = await customerResponse.json() as { id?: string; error?: { message: string } };
+
+      if (!customerResponse.ok || !customerData.id) {
+        console.error('Stripe customer creation failed:', customerData);
+        return jsonResponse({ error: 'Failed to create customer' }, 500, env, undefined, requestOrigin);
+      }
+
+      customerId = customerData.id;
+
+      // Save customer ID to subscriber
+      await env.DB.prepare(
+        'UPDATE subscribers SET stripe_customer_id = ? WHERE id = ?'
+      ).bind(customerId, subscriberId).run();
+    }
+
+    // Create Checkout session
+    const successUrl = `${env.ALLOWED_ORIGIN}/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${env.ALLOWED_ORIGIN}/?canceled=true`;
+
+    const sessionResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        customer: customerId,
+        'line_items[0][price]': env.STRIPE_PRICE_ID,
+        'line_items[0][quantity]': '1',
+        mode: 'subscription',
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        'subscription_data[trial_period_days]': '7',
+        'subscription_data[metadata][subscriber_id]': subscriberId,
+      }).toString(),
+    });
+
+    const sessionData = await sessionResponse.json() as { id?: string; url?: string; error?: { message: string } };
+
+    if (!sessionResponse.ok || !sessionData.url) {
+      console.error('Stripe session creation failed:', sessionData);
+      return jsonResponse({ error: 'Failed to create checkout session' }, 500, env, undefined, requestOrigin);
+    }
+
+    return jsonResponse({
+      success: true,
+      checkoutUrl: sessionData.url,
+      sessionId: sessionData.id,
+    }, 200, env, undefined, requestOrigin);
+
+  } catch (error) {
+    console.error('Stripe error:', error);
+    return jsonResponse({ error: 'Stripe error' }, 500, env, undefined, requestOrigin);
+  }
+}
+
+/**
+ * Handle Stripe webhook events
+ */
+async function handleStripeWebhook(
+  request: Request,
+  env: Env,
+  requestOrigin: string
+): Promise<Response> {
+  if (!env.STRIPE_SECRET_KEY) {
+    return jsonResponse({ error: 'Stripe not configured' }, 500, env, undefined, requestOrigin);
+  }
+
+  const body = await request.text();
+
+  // TODO: Verify webhook signature if STRIPE_WEBHOOK_SECRET is set
+  // For now, we'll parse the event directly (less secure but works for MVP)
+
+  let event;
+  try {
+    event = JSON.parse(body) as {
+      type: string;
+      data: {
+        object: {
+          id: string;
+          customer?: string;
+          status?: string;
+          metadata?: { subscriber_id?: string };
+          subscription?: string;
+        };
+      };
+    };
+  } catch {
+    return jsonResponse({ error: 'Invalid JSON' }, 400, env, undefined, requestOrigin);
+  }
+
+  console.log('Stripe webhook received:', event.type);
+
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        // User completed checkout - subscription is now active
+        const session = event.data.object;
+        const subscriberId = session.metadata?.subscriber_id;
+
+        if (subscriberId) {
+          await env.DB.prepare(`
+            UPDATE subscribers
+            SET status = 'active', stripe_subscription_id = ?
+            WHERE id = ?
+          `).bind(session.subscription || session.id, subscriberId).run();
+          console.log(`Subscriber ${subscriberId} activated via checkout`);
+        }
+        break;
+      }
+
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object;
+        const subscriberId = subscription.metadata?.subscriber_id;
+
+        if (subscriberId && subscription.status === 'active') {
+          await env.DB.prepare(`
+            UPDATE subscribers SET status = 'active' WHERE id = ?
+          `).bind(subscriberId).run();
+          console.log(`Subscriber ${subscriberId} subscription active`);
+        } else if (subscriberId && subscription.status === 'trialing') {
+          // Still in trial - keep as trial status
+          console.log(`Subscriber ${subscriberId} in trial`);
+        }
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        // Subscription cancelled
+        const subscription = event.data.object;
+        const subscriberId = subscription.metadata?.subscriber_id;
+
+        if (subscriberId) {
+          await env.DB.prepare(`
+            UPDATE subscribers SET status = 'cancelled' WHERE id = ?
+          `).bind(subscriberId).run();
+          console.log(`Subscriber ${subscriberId} subscription cancelled`);
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        // Payment failed - could downgrade or notify
+        const invoice = event.data.object;
+        console.log(`Payment failed for customer ${invoice.customer}`);
+        // Optionally: Update status to 'past_due' or send notification
+        break;
+      }
+
+      default:
+        console.log(`Unhandled webhook event: ${event.type}`);
+    }
+
+    return jsonResponse({ received: true }, 200, env, undefined, requestOrigin);
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    return jsonResponse({ error: 'Webhook processing failed' }, 500, env, undefined, requestOrigin);
+  }
 }

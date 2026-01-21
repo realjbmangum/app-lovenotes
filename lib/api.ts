@@ -1,7 +1,7 @@
-// API client for LoveNotes backend (Cloudflare Worker)
+// API client for SendMyLove backend (Cloudflare Worker)
 
 // Production worker URL
-const PRODUCTION_API_URL = 'https://lovenotes-api.bmangum1.workers.dev/api';
+const PRODUCTION_API_URL = 'https://lovenotes-api-production.bmangum1.workers.dev/api';
 
 // Use env var if set, otherwise detect environment
 const API_URL = process.env.NEXT_PUBLIC_API_URL ||
@@ -73,4 +73,33 @@ export function validatePhoneNumber(phone: string): boolean {
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+}
+
+export interface CheckoutResponse {
+  success: boolean;
+  checkoutUrl?: string;
+  sessionId?: string;
+  error?: string;
+}
+
+export async function createCheckoutSession(): Promise<CheckoutResponse> {
+  try {
+    const response = await fetch(`${API_URL}/create-checkout-session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Required for auth cookie
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return { success: false, error: error.error || 'Something went wrong' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Checkout error:', error);
+    return { success: false, error: 'Network error. Please try again.' };
+  }
 }

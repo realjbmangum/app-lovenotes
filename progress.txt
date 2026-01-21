@@ -248,9 +248,66 @@
 **Commit:** `9e25d49` - fix(security): Address critical vulnerabilities and improve accessibility
 
 **Next Steps:**
-- [ ] Set up Stripe Checkout for payments
+- [x] Set up Stripe Checkout for payments
 - [ ] Add Twilio for SMS delivery
 - [ ] Consider rate limiting (medium priority)
 - [ ] Add login flow for returning users
+
+---
+
+### 2026-01-21 - Stripe Checkout Integration Complete
+
+**Completed:**
+- Fixed JWT_SECRET missing from production (was causing "Server configuration error")
+- Integrated Stripe Checkout with 7-day free trial
+- Created checkout session inline during signup (fixes auth cookie race condition)
+- Added `payment_method_collection: 'always'` to require card upfront
+- Added Stripe webhook handler for subscription events
+- Added SENDGRID_API_KEY to production worker
+- Deleted confusing non-production worker (lovenotes-api)
+- Deployed worker and Pages to production
+- Tested full signup → Stripe checkout flow with real card
+- Confirmed subscription logged in Stripe dashboard
+
+**Production Secrets (all set):**
+- `JWT_SECRET` - ✅ Set (generated secure random)
+- `STRIPE_SECRET_KEY` - ✅ Set (live mode: sk_live_...)
+- `STRIPE_PRICE_ID` - ✅ Set (price_1Ss7twHtkmIJvXTFATvW4wsZ)
+- `STRIPE_WEBHOOK_SECRET` - ✅ Set
+- `SENDGRID_API_KEY` - ✅ Set
+
+**Stripe Configuration:**
+- Product: $5/month subscription
+- Trial: 7 days free
+- Card required at signup (payment_method_collection: 'always')
+- Webhook events: checkout.session.completed, customer.subscription.created/updated/deleted, invoice.payment_failed
+
+**Files Changed:**
+- `worker/index.ts` - Inline Stripe checkout during signup, webhook handler, trial expiration check
+- `app/page.tsx` - Simplified to redirect to checkoutUrl from signup response
+- `wrangler.toml` - Added env.production.d1_databases binding
+
+**Infrastructure Cleanup:**
+- Deleted `lovenotes-api` worker (was confusing with `lovenotes-api-production`)
+- Always deploy with: `npx wrangler deploy --env production`
+
+**Signup Flow (Working):**
+1. User fills form on sendmylove.app
+2. POST /api/signup creates user, generates JWT cookie
+3. Stripe customer created, checkout session created inline
+4. User redirected to Stripe Checkout (card required)
+5. After payment → redirected to /success
+6. 7-day trial, then $5/month charge
+
+**Decisions:**
+- Live Stripe keys (not test mode) - real cards only
+- Trial expires in database regardless of Stripe status
+- User stores API keys in Bitwarden
+
+**Next Steps:**
+- [ ] Add Twilio for SMS delivery
+- [ ] Debug dashboard not loading after long Stripe checkout
+- [ ] Add login flow for returning users
+- [ ] Consider rate limiting
 
 ---

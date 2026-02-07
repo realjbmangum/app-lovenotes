@@ -1,0 +1,77 @@
+[
+  {
+    "theme": "appreciative",
+    "nudge": "What's something {wife_name} handles that you'd be completely lost without?",
+    "starter": "I don't say this enough but the way you ___ makes everything work"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "When did {wife_name} last go above and beyond for the family?",
+    "starter": "I noticed what you did with ___ and I want you to know ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's a sacrifice {wife_name} made that you never properly thanked her for?",
+    "starter": "I never properly thanked you for ___. That meant more than you know."
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's something {wife_name} does for the kids that amazes you?",
+    "starter": "Watching you ___ with the kids makes me realize ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's a quality of {wife_name}'s that makes her a great partner?",
+    "starter": "One of the things I love most about being married to you is ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What did {wife_name} do this week that made your life easier?",
+    "starter": "Thank you for ___. I know it doesn't seem like a big deal but ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "How has {wife_name} made you a better person?",
+    "starter": "Before you, I never ___. You made me ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's something {wife_name} worries about that she handles way better than she thinks?",
+    "starter": "I know you stress about ___ but honestly you're crushing it because ___"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's a tough moment where {wife_name} held everything together?",
+    "starter": "I think about when ___ happened and how you ___. I'll never forget that."
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What does {wife_name} do that nobody else notices but you?",
+    "starter": "Nobody else sees how you ___ but I do. And it matters."
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What about your home life feels good because of {wife_name}?",
+    "starter": "Our home feels like ___ and that's because of you"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's something {wife_name} taught you that you didn't expect to learn?",
+    "starter": "You taught me to ___ and I didn't even realize I needed that"
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "When has {wife_name} supported a decision of yours even when she wasn't sure about it?",
+    "starter": "Remember when I wanted to ___ and you backed me up even though ___? That meant everything."
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "What's one thing {wife_name} does better than anyone you know?",
+    "starter": "Nobody ___ like you do. Not even close."
+  },
+  {
+    "theme": "appreciative",
+    "nudge": "If you had to brag about {wife_name} to a stranger, what would you say?",
+    "starter": "If someone asked me about my wife I'd tell them ___"
+  }
+]

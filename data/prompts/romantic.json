@@ -1,0 +1,77 @@
+[
+  {
+    "theme": "romantic",
+    "nudge": "What moment with {wife_name} do you keep replaying in your head?",
+    "starter": "I keep thinking about when we ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "If you could relive one day with {wife_name}, which would it be?",
+    "starter": "You know what I'd give anything to do again? ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's something small {wife_name} does that always gets you?",
+    "starter": "You probably don't realize this but when you ___ it ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "When did you last look at {wife_name} and think 'damn, she's mine'?",
+    "starter": "I looked at you today and thought ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's your favorite thing about waking up next to {wife_name}?",
+    "starter": "My favorite part of every morning is ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's a memory from early in your relationship that still makes you smile?",
+    "starter": "Remember when we ___? I was just thinking about that and ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What did you notice about {wife_name} the first time you met?",
+    "starter": "The first thing I noticed about you was ___ and I still ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's something about your life together that you never want to take for granted?",
+    "starter": "I never want to stop ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "When's the last time {wife_name} made you feel like the luckiest guy alive?",
+    "starter": "You made me feel like ___ when you ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's a song that reminds you of {wife_name} and why?",
+    "starter": "I heard ___ today and it made me think of you because ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What would you tell {wife_name} if you had to sum up how you feel in one honest sentence?",
+    "starter": "If I had to say it in one sentence: ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's a place that's 'yours' — a spot that means something to both of you?",
+    "starter": "I drove past ___ today and it made me miss ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What's something {wife_name} said once that stuck with you?",
+    "starter": "I still think about when you said ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What does home feel like to you? (Hint: it's probably not about the house.)",
+    "starter": "Home to me is ___"
+  },
+  {
+    "theme": "romantic",
+    "nudge": "What are you most looking forward to doing with {wife_name}?",
+    "starter": "I can't wait for us to ___"
+  }
+]

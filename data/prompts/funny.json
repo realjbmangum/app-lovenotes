@@ -1,0 +1,77 @@
+[
+  {
+    "theme": "funny",
+    "nudge": "What's the last ridiculous thing {wife_name} made you laugh about?",
+    "starter": "I'm still laughing about when you ___"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's a weird habit of yours that {wife_name} somehow tolerates?",
+    "starter": "The fact that you put up with my ___ is why I married you"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's the most embarrassing thing that's happened to you two as a couple?",
+    "starter": "Remember when we ___ and ___? I still can't believe that happened"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's something {wife_name} does that cracks you up but she doesn't realize?",
+    "starter": "You have no idea how funny it is when you ___"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's a running joke between you two that no one else gets?",
+    "starter": "Just thinking about ___ and cracking up at my desk"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's the last argument you had that was so dumb you both ended up laughing?",
+    "starter": "Remember when we argued about ___? That was peak us"
+  },
+  {
+    "theme": "funny",
+    "nudge": "If someone made a movie about your marriage, what would the funniest scene be?",
+    "starter": "If they made a movie about us, the best scene would be when ___"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's something {wife_name} is weirdly competitive about?",
+    "starter": "I love how you turn ___ into a competition. Never change."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What food is {wife_name} most protective of? (The one you can't touch.)",
+    "starter": "I thought about eating your ___ today. Then I remembered I value my life."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's the most 'you two' thing about your relationship?",
+    "starter": "No other couple on earth ___ like we do. That's our thing."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's the worst date you two have ever been on?",
+    "starter": "Remember that time we tried to ___ and it went completely sideways? Best worst date ever."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's an inside joke that would make zero sense to anyone else?",
+    "starter": "Two words: ___. (If anyone else read this they'd think we're insane.)"
+  },
+  {
+    "theme": "funny",
+    "nudge": "What celebrity does {wife_name} have an unreasonable obsession with?",
+    "starter": "I saw ___ on TV and thought of you. I'm choosing not to be jealous."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's something {wife_name} always says she'll do but never actually does?",
+    "starter": "Hey remember when you said you were going to ___? That was ___ ago. Just checking in."
+  },
+  {
+    "theme": "funny",
+    "nudge": "What's the most {wife_name} thing {wife_name} has ever done?",
+    "starter": "You did the most you thing today: ___"
+  }
+]

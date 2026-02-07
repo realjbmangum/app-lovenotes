@@ -13,6 +13,7 @@
 - **Form accessibility**: Use `aria-describedby` linking errors, `aria-invalid`, `role="alert"`
 - **Themes**: romantic, funny, appreciative, encouraging, spicy (5 total)
 - **Occasions**: anniversary, birthday, valentines, christmas, mothers_day, thanksgiving, new_years
+- **Promo videos**: Use `/remotion` skill - renders MP4s from React code, project at `promo-video/`
 
 ---
 
@@ -309,5 +310,115 @@
 - [ ] Debug dashboard not loading after long Stripe checkout
 - [ ] Add login flow for returning users
 - [ ] Consider rate limiting
+
+---
+
+### 2026-01-24 - Comprehensive Marketing Plan Created
+
+**Completed:**
+- Created full 90-day organic marketing plan for sendmylove.app
+- Goal: 100 signups in 90 days, $0 budget, 5-10 hrs/week
+- Researched competitors: Paired ($70/yr), Lasting (freemium), Lovewick (free)
+- Identified key positioning: "Not good with words? We've got 2,140 of them ready to go."
+- Created all ready-to-post content in one comprehensive document
+
+**Files Created:**
+- `tasks/marketing-plan-sendmylove.md` - Complete marketing plan (~2,000 lines)
+- `tasks/marketing-plan-sendmylove.html` - HTML version for browser viewing
+
+**Marketing Plan Contents:**
+- **Reddit Posts (5):** r/Marriage launch, r/AskMen discussion, r/Entrepreneur traction story, wife perspective, r/AskMenOver30
+- **Twitter/X Threads (4):** Launch announcement, Week 1 update, Tech stack, Personal story
+- **Single Tweets (8):** Ready-to-post tweets for regular posting
+- **TikTok Scripts (8):** Wife reaction POV, "Not good with words", Read to wife challenge, Before/after marriage, Daily message reveal, Wife sends to husband, 8 vibes showcase, Story time
+- **Instagram (2 carousels + 4 stories):** "8 Ways to Make Her Day", "Why Wives Want More Texts"
+- **Product Hunt:** Full launch copy, tagline, description, maker comment
+- **Hacker News:** Show HN post with tech stack details
+- **Facebook Groups (2):** Marriage groups, Christian marriage groups
+- **SEO Blog Outlines (4):** "100 Love Messages", "Lazy Husband's Guide", "What to Text Your Wife", "Why Daily Love Notes Changed My Marriage"
+- **Partnership Templates (3):** Podcast pitch, Blogger outreach, Affiliate pitch
+- **Social Bios:** Twitter, TikTok, Instagram, LinkedIn
+
+**Key Strategy:**
+1. **Primary channels:** TikTok (wife reactions), Reddit (r/Marriage), SEO
+2. **Launch sequence:** Day 1-12 across Twitter, Reddit, TikTok, Instagram, Product Hunt, HN
+3. **Weekly cadence:** 3-5 TikToks, 2 Twitter threads, daily Reddit engagement, 2 SEO articles/month
+
+**Competitor Analysis:**
+| Competitor | Price | Our Advantage |
+|------------|-------|---------------|
+| Paired | $70/yr | We're $60/yr, SMS-based (no app download) |
+| Lasting | Freemium | We're simple (no therapy framing) |
+| Lovewick | Free | We're focused (just love notes, not feature-bloated) |
+
+**30-60-90 Milestones:**
+- Day 30: 25 signups, 500 visitors, social accounts active
+- Day 60: 60 signups, Product Hunt launched, first viral content
+- Day 90: 100 signups achieved
+
+**Quick Wins This Week:**
+1. Create TikTok/Instagram/Twitter accounts
+2. Set up Google Analytics
+3. Film first TikTok (wife reaction format)
+4. Post Twitter launch thread
+5. Start engaging in r/Marriage
+
+**Next Steps:**
+- [ ] Create social media accounts with provided bios
+- [ ] Set up Google Analytics on sendmylove.app
+- [ ] Film first TikTok video
+- [ ] Post Reddit launch post to r/Marriage
+- [ ] Add Twilio for SMS delivery (product)
+- [ ] Add login flow for returning users (product)
+
+---
+
+### 2026-01-24 - Promo Video Created with Remotion
+
+**Completed:**
+- Created `/remotion` skill in `~/.claude/skills/remotion/SKILL.md` for discoverability
+- Set up Remotion promo video project at `app-lovenotes/promo-video/`
+- Built 15-second animated promo video with 4 scenes
+- Rendered vertical MP4 for TikTok/Reels/Stories (1080x1920)
+
+**Video Structure (15 seconds @ 30fps):**
+1. **Hook (0-3s):** "Still texting 'Hey' to your wife?" + boring message bubble
+2. **Problem (3-6s):** "Words are hard. We get it." + floating hearts
+3. **Solution (6-10s):** 3-step flow (Pick a vibe → Get a message → Send love) + voice buttons + example message
+4. **CTA (10-15s):** Red gradient background, logo on white card, "$5/month", "sendmylove.app" button
+
+**Files Created:**
+- `promo-video/package.json` - Remotion dependencies
+- `promo-video/tsconfig.json` - TypeScript config
+- `promo-video/remotion.config.ts` - Render settings
+- `promo-video/src/index.ts` - Entry point
+- `promo-video/src/Root.tsx` - Composition registry (vertical + horizontal)
+- `promo-video/src/LoveNotesPromo.tsx` - Main video component with 4 scenes
+- `promo-video/public/logo.png` - Brand logo (copied from app)
+- `promo-video/out/lovenotes-vertical.mp4` - Final rendered video (1.5 MB)
+
+**Skill Added:**
+- `~/.claude/skills/remotion/SKILL.md` - Invocable via `/remotion`
+- Trigger words: "promo video", "social media clip", "app demo video", "marketing video", "programmatic video"
+- Reference to SCDMV promo project included
+
+**Render Commands:**
+```bash
+cd app-lovenotes/promo-video
+npm run render:vertical   # TikTok/Reels (1080x1920)
+npm run render:horizontal # YouTube/Twitter (1920x1080)
+```
+
+**Design Decisions:**
+- Warm rose/coral color palette to match romantic brand
+- Logo displayed on white card against red CTA background for visibility
+- Spring animations for natural feel
+- 4 voice button samples: Flirty, Deep, Grateful, Playful
+
+**Next Steps:**
+- [ ] Render horizontal version for YouTube/Twitter
+- [ ] Upload vertical to TikTok/Instagram Reels
+- [ ] Create social media accounts with provided bios
+- [ ] Add Twilio for SMS delivery (product)
 
 ---

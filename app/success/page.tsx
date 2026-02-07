@@ -31,9 +31,9 @@ function SuccessContent() {
             <div className="flex items-start gap-4 p-4 bg-rose-50 rounded-lg">
               <Clock className="h-6 w-6 text-rose-500 mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-gray-900">First message tomorrow at 8am</h3>
+                <h3 className="font-semibold text-gray-900">Daily prompts start tomorrow</h3>
                 <p className="text-gray-600 text-sm">
-                  Your personalized love note will arrive via text message.
+                  You'll get a personalized prompt each day to help you write something real for {wifeName}.
                 </p>
               </div>
             </div>
@@ -43,7 +43,7 @@ function SuccessContent() {
               <div>
                 <h3 className="font-semibold text-gray-900">How it works</h3>
                 <p className="text-gray-600 text-sm">
-                  Copy the message, personalize it if you'd like, and send it to {wifeName} from your phone. She'll only see it coming from you.
+                  We give you a prompt + fill-in-the-blank starter. You add the real stuff. Copy it and send from your phone — she only sees it from you.
                 </p>
               </div>
             </div>
@@ -64,14 +64,14 @@ function SuccessContent() {
           </div>
 
           <div className="pt-4 border-t border-gray-200 space-y-3">
-            <Link href={subscriberId ? `/dashboard?id=${subscriberId}` : '/dashboard'}>
+            <Link href="/onboarding">
               <Button className="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700">
-                Get Your First Message Now
+                Set Up Your Profile — Get Your First Prompt
               </Button>
             </Link>
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="outline" className="w-full border-rose-200 text-rose-600 hover:bg-rose-50">
-                Back to Home
+                Skip to Dashboard
               </Button>
             </Link>
           </div>

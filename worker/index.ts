@@ -9,6 +9,7 @@ export interface Env {
   ENVIRONMENT: string;
   JWT_SECRET: string;
   ALLOWED_ORIGIN: string;
+  ANTHROPIC_API_KEY?: string;
   TWILIO_ACCOUNT_SID?: string;
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_PHONE_NUMBER?: string;
@@ -398,6 +399,56 @@ export default {
       // Create Stripe Checkout session for subscription
       if (url.pathname === '/api/create-checkout-session' && request.method === 'POST') {
         return handleCreateCheckoutSession(payload.sub, payload.email, env, requestOrigin);
+      }
+
+      // --- V2 Endpoints ---
+
+      // Relationship profile
+      if (url.pathname === '/api/profile' && request.method === 'GET') {
+        return handleGetProfile(payload.sub, env, requestOrigin);
+      }
+      if (url.pathname === '/api/profile' && request.method === 'POST') {
+        return handleSaveProfile(request, payload.sub, env, requestOrigin);
+      }
+
+      // Daily prompt
+      if (url.pathname === '/api/prompt/today' && request.method === 'GET') {
+        return handleGetTodayPrompt(payload.sub, env, requestOrigin);
+      }
+      if (url.pathname === '/api/prompt/alternative' && request.method === 'GET') {
+        return handleGetAlternativePrompt(payload.sub, env, requestOrigin);
+      }
+
+      // Message composition
+      if (url.pathname === '/api/compose' && request.method === 'POST') {
+        return handleCompose(request, payload.sub, env, requestOrigin);
+      }
+
+      // AI polish
+      if (url.pathname === '/api/polish' && request.method === 'POST') {
+        return handlePolish(request, payload.sub, env, requestOrigin);
+      }
+
+      // Daily log
+      if (url.pathname === '/api/log' && request.method === 'POST') {
+        return handleSaveLog(request, payload.sub, env, requestOrigin);
+      }
+      if (url.pathname === '/api/log' && request.method === 'GET') {
+        return handleGetLogs(payload.sub, env, requestOrigin);
+      }
+
+      // History & favorites
+      if (url.pathname === '/api/history' && request.method === 'GET') {
+        return handleGetHistory(url, payload.sub, env, requestOrigin);
+      }
+      if (url.pathname.startsWith('/api/favorites') && request.method === 'GET') {
+        return handleGetFavorites(payload.sub, env, requestOrigin);
+      }
+      if (url.pathname.startsWith('/api/favorites/') && request.method === 'POST') {
+        const compositionId = url.pathname.split('/').pop();
+        if (compositionId) {
+          return handleToggleFavorite(compositionId, payload.sub, env, requestOrigin);
+        }
       }
 
       return jsonResponse({ error: 'Not found' }, 404, env, undefined, requestOrigin);
@@ -1024,28 +1075,652 @@ async function handleTestOccasionEmail(request: Request, env: Env, requestOrigin
   return jsonResponse({ error: 'SendGrid not configured' }, 500, env, undefined, requestOrigin);
 }
 
+// ============================================================
+// V2 HANDLERS — Profile, Prompts, Compose, Polish, Logs, History
+// ============================================================
+
+const V2_THEMES = ['romantic', 'funny', 'flirty', 'appreciative', 'encouraging', 'spicy'];
+
+/** GET /api/profile — get relationship profile */
+async function handleGetProfile(subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const profile = await env.DB.prepare(
+    'SELECT * FROM relationship_profiles WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  if (!profile) {
+    return jsonResponse({ exists: false }, 200, env, undefined, requestOrigin);
+  }
+
+  return jsonResponse({ exists: true, profile }, 200, env, undefined, requestOrigin);
+}
+
+/** POST /api/profile — create or update relationship profile */
+async function handleSaveProfile(request: Request, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const body = await request.json() as {
+    wife_name: string;
+    nickname?: string;
+    how_met?: string;
+    years_together?: string;
+    love_language?: string;
+    inside_jokes?: string;
+    what_makes_her_smile?: string;
+    kids_names?: string;
+    anniversary_date?: string;
+    wife_birthday?: string;
+    theme_preference?: string;
+    frequency?: string;
+  };
+
+  if (!body.wife_name) {
+    return jsonResponse({ error: 'Wife name is required' }, 400, env, undefined, requestOrigin);
+  }
+
+  // Sanitize inputs
+  const sanitize = (val?: string, maxLen = 200) =>
+    val ? val.replace(/[<>]/g, '').slice(0, maxLen) : null;
+
+  const wifeName = sanitize(body.wife_name, 50) || '';
+  const nickname = sanitize(body.nickname, 30);
+  const howMet = sanitize(body.how_met, 500);
+  const yearsTogether = sanitize(body.years_together, 10);
+  const loveLanguage = sanitize(body.love_language, 30);
+  const insideJokes = sanitize(body.inside_jokes, 500);
+  const whatMakesHerSmile = sanitize(body.what_makes_her_smile, 500);
+  const kidsNames = sanitize(body.kids_names, 200);
+  const anniversaryDate = sanitize(body.anniversary_date, 10);
+  const wifeBirthday = sanitize(body.wife_birthday, 5);
+
+  // Upsert profile
+  const existing = await env.DB.prepare(
+    'SELECT subscriber_id FROM relationship_profiles WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  if (existing) {
+    await env.DB.prepare(`
+      UPDATE relationship_profiles SET
+        wife_name = ?, nickname = ?, how_met = ?, years_together = ?,
+        love_language = ?, inside_jokes = ?, what_makes_her_smile = ?,
+        kids_names = ?, anniversary_date = ?, wife_birthday = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE subscriber_id = ?
+    `).bind(
+      wifeName, nickname, howMet, yearsTogether,
+      loveLanguage, insideJokes, whatMakesHerSmile,
+      kidsNames, anniversaryDate, wifeBirthday,
+      subscriberId
+    ).run();
+  } else {
+    await env.DB.prepare(`
+      INSERT INTO relationship_profiles
+        (subscriber_id, wife_name, nickname, how_met, years_together,
+         love_language, inside_jokes, what_makes_her_smile,
+         kids_names, anniversary_date, wife_birthday)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      subscriberId, wifeName, nickname, howMet, yearsTogether,
+      loveLanguage, insideJokes, whatMakesHerSmile,
+      kidsNames, anniversaryDate, wifeBirthday
+    ).run();
+  }
+
+  // Also update subscriber table with wife_name and nickname
+  await env.DB.prepare(
+    'UPDATE subscribers SET wife_name = ?, nickname = ?, onboarding_complete = 1 WHERE id = ?'
+  ).bind(wifeName, nickname, subscriberId).run();
+
+  // Update theme/frequency if provided
+  if (body.theme_preference) {
+    await env.DB.prepare(
+      'UPDATE subscribers SET theme = ? WHERE id = ?'
+    ).bind(body.theme_preference, subscriberId).run();
+  }
+  if (body.frequency) {
+    await env.DB.prepare(
+      'UPDATE subscribers SET frequency = ? WHERE id = ?'
+    ).bind(body.frequency, subscriberId).run();
+  }
+
+  return jsonResponse({ success: true }, 200, env, undefined, requestOrigin);
+}
+
+/** Personalize prompt text by replacing placeholders with profile data */
+function personalizeText(text: string, profile: Record<string, unknown> | null): string {
+  if (!profile) return text.replace(/\{wife_name\}/g, 'her');
+  let result = text;
+  result = result.replace(/\{wife_name\}/g, (profile.wife_name as string) || 'her');
+  result = result.replace(/\{nickname\}/g, (profile.nickname as string) || (profile.wife_name as string) || 'babe');
+  result = result.replace(/\{years_together\}/g, (profile.years_together as string) || 'all these');
+  return result;
+}
+
+/** GET /api/prompt/today — get or generate today's prompt */
+async function handleGetTodayPrompt(subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Check if we already generated a prompt today
+  const existingPrompt = await env.DB.prepare(`
+    SELECT dp.*, pt.theme FROM daily_prompts dp
+    JOIN prompt_templates pt ON dp.prompt_template_id = pt.id
+    WHERE dp.subscriber_id = ? AND DATE(dp.created_at) = ?
+    ORDER BY dp.created_at DESC LIMIT 1
+  `).bind(subscriberId, today).first();
+
+  if (existingPrompt) {
+    return jsonResponse({
+      prompt: {
+        id: existingPrompt.id,
+        theme: existingPrompt.theme,
+        nudge: existingPrompt.personalized_nudge,
+        starter: existingPrompt.personalized_starter,
+        completed: existingPrompt.completed,
+      }
+    }, 200, env, undefined, requestOrigin);
+  }
+
+  // Generate a new prompt for today
+  const profile = await env.DB.prepare(
+    'SELECT * FROM relationship_profiles WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  const subscriber = await env.DB.prepare(
+    'SELECT theme, tier FROM subscribers WHERE id = ?'
+  ).bind(subscriberId).first();
+
+  // Check free tier limit (1 prompt per week)
+  if (subscriber?.tier === 'free') {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const recentPrompts = await env.DB.prepare(`
+      SELECT COUNT(*) as count FROM daily_prompts
+      WHERE subscriber_id = ? AND DATE(created_at) > ?
+    `).bind(subscriberId, weekAgo).first();
+
+    if ((recentPrompts?.count as number) >= 1) {
+      return jsonResponse({
+        error: 'free_limit',
+        message: 'Free tier gets 1 prompt per week. Upgrade for daily prompts.',
+      }, 200, env, undefined, requestOrigin);
+    }
+  }
+
+  // Pick theme
+  let theme = (subscriber?.theme as string) || 'romantic';
+  if (theme === 'random') {
+    theme = V2_THEMES[Math.floor(Math.random() * V2_THEMES.length)];
+  }
+
+  // Check for occasion-specific prompts
+  const now = new Date();
+  let occasion: string | null = null;
+
+  // Check holidays
+  occasion = getHolidayForDate(now);
+
+  // Check anniversary
+  if (profile?.anniversary_date) {
+    const annivMMDD = (profile.anniversary_date as string).substring(5);
+    const todayMMDD = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if (annivMMDD === todayMMDD) occasion = 'anniversary';
+  }
+
+  // Check wife's birthday
+  if (profile?.wife_birthday) {
+    const todayMMDD = `${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    if ((profile.wife_birthday as string) === todayMMDD) occasion = 'birthday';
+  }
+
+  // Get a prompt template (occasion first, then theme)
+  let template;
+  if (occasion) {
+    template = await env.DB.prepare(`
+      SELECT * FROM prompt_templates WHERE occasion = ?
+      ORDER BY RANDOM() LIMIT 1
+    `).bind(occasion).first();
+  }
+
+  if (!template) {
+    // Get one we haven't used recently (90-day window)
+    const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    template = await env.DB.prepare(`
+      SELECT pt.* FROM prompt_templates pt
+      WHERE pt.theme = ? AND pt.occasion IS NULL
+        AND pt.id NOT IN (
+          SELECT prompt_template_id FROM daily_prompts
+          WHERE subscriber_id = ? AND DATE(created_at) > ?
+        )
+      ORDER BY RANDOM() LIMIT 1
+    `).bind(theme, subscriberId, ninetyDaysAgo).first();
+
+    // Fallback: if all used, just pick random
+    if (!template) {
+      template = await env.DB.prepare(`
+        SELECT * FROM prompt_templates WHERE theme = ? AND occasion IS NULL
+        ORDER BY RANDOM() LIMIT 1
+      `).bind(theme).first();
+    }
+  }
+
+  if (!template) {
+    return jsonResponse({ error: 'No prompt templates found' }, 404, env, undefined, requestOrigin);
+  }
+
+  // Personalize the prompt
+  const nudge = personalizeText(template.nudge_text as string, profile);
+  const starter = personalizeText(template.starter_text as string, profile);
+
+  // Store the daily prompt
+  const result = await env.DB.prepare(`
+    INSERT INTO daily_prompts (subscriber_id, prompt_template_id, personalized_nudge, personalized_starter, sent_at)
+    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+  `).bind(subscriberId, template.id, nudge, starter).run();
+
+  const promptId = result.meta?.last_row_id;
+
+  return jsonResponse({
+    prompt: {
+      id: promptId,
+      theme: template.theme,
+      nudge,
+      starter,
+      completed: 0,
+    }
+  }, 200, env, undefined, requestOrigin);
+}
+
+/** GET /api/prompt/alternative — swap for a different prompt */
+async function handleGetAlternativePrompt(subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const profile = await env.DB.prepare(
+    'SELECT * FROM relationship_profiles WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  const subscriber = await env.DB.prepare(
+    'SELECT theme FROM subscribers WHERE id = ?'
+  ).bind(subscriberId).first();
+
+  let theme = (subscriber?.theme as string) || 'romantic';
+  if (theme === 'random') {
+    theme = V2_THEMES[Math.floor(Math.random() * V2_THEMES.length)];
+  }
+
+  // Get today's prompt IDs to exclude
+  const today = new Date().toISOString().split('T')[0];
+  const todayPrompts = await env.DB.prepare(`
+    SELECT prompt_template_id FROM daily_prompts
+    WHERE subscriber_id = ? AND DATE(created_at) = ?
+  `).bind(subscriberId, today).all();
+
+  const excludeIds = todayPrompts.results?.map(r => r.prompt_template_id) || [];
+  const excludePlaceholders = excludeIds.length > 0 ? excludeIds.map(() => '?').join(',') : '0';
+
+  const template = await env.DB.prepare(`
+    SELECT * FROM prompt_templates
+    WHERE theme = ? AND occasion IS NULL
+      AND id NOT IN (${excludePlaceholders})
+    ORDER BY RANDOM() LIMIT 1
+  `).bind(theme, ...excludeIds).first();
+
+  if (!template) {
+    // Fallback: any theme
+    const fallback = await env.DB.prepare(`
+      SELECT * FROM prompt_templates
+      WHERE occasion IS NULL AND id NOT IN (${excludePlaceholders})
+      ORDER BY RANDOM() LIMIT 1
+    `).bind(...excludeIds).first();
+
+    if (!fallback) {
+      return jsonResponse({ error: 'No alternative prompts available' }, 404, env, undefined, requestOrigin);
+    }
+
+    const nudge = personalizeText(fallback.nudge_text as string, profile);
+    const starter = personalizeText(fallback.starter_text as string, profile);
+
+    const result = await env.DB.prepare(`
+      INSERT INTO daily_prompts (subscriber_id, prompt_template_id, personalized_nudge, personalized_starter, sent_at)
+      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `).bind(subscriberId, fallback.id, nudge, starter).run();
+
+    return jsonResponse({
+      prompt: {
+        id: result.meta?.last_row_id,
+        theme: fallback.theme,
+        nudge,
+        starter,
+        completed: 0,
+      }
+    }, 200, env, undefined, requestOrigin);
+  }
+
+  const nudge = personalizeText(template.nudge_text as string, profile);
+  const starter = personalizeText(template.starter_text as string, profile);
+
+  const result = await env.DB.prepare(`
+    INSERT INTO daily_prompts (subscriber_id, prompt_template_id, personalized_nudge, personalized_starter, sent_at)
+    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+  `).bind(subscriberId, template.id, nudge, starter).run();
+
+  return jsonResponse({
+    prompt: {
+      id: result.meta?.last_row_id,
+      theme: template.theme,
+      nudge,
+      starter,
+      completed: 0,
+    }
+  }, 200, env, undefined, requestOrigin);
+}
+
+/** POST /api/compose — save a composed message */
+async function handleCompose(request: Request, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const body = await request.json() as {
+    daily_prompt_id?: number;
+    raw_text: string;
+    polished_text?: string;
+    final_text: string;
+    tone_setting?: string;
+  };
+
+  if (!body.raw_text || !body.final_text) {
+    return jsonResponse({ error: 'raw_text and final_text are required' }, 400, env, undefined, requestOrigin);
+  }
+
+  // Sanitize (no HTML tags but allow everything else — it's their personal message)
+  const rawText = body.raw_text.replace(/[<>]/g, '').slice(0, 2000);
+  const finalText = body.final_text.replace(/[<>]/g, '').slice(0, 2000);
+  const polishedText = body.polished_text ? body.polished_text.replace(/[<>]/g, '').slice(0, 2000) : null;
+  const tone = ['sweet', 'balanced', 'spicy'].includes(body.tone_setting || '') ? body.tone_setting : 'sweet';
+
+  const result = await env.DB.prepare(`
+    INSERT INTO message_compositions
+      (subscriber_id, daily_prompt_id, raw_text, polished_text, final_text, tone_setting)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).bind(subscriberId, body.daily_prompt_id || null, rawText, polishedText, finalText, tone).run();
+
+  // Mark the daily prompt as completed
+  if (body.daily_prompt_id) {
+    await env.DB.prepare(
+      'UPDATE daily_prompts SET completed = 1 WHERE id = ? AND subscriber_id = ?'
+    ).bind(body.daily_prompt_id, subscriberId).run();
+  }
+
+  return jsonResponse({
+    success: true,
+    composition_id: result.meta?.last_row_id,
+  }, 200, env, undefined, requestOrigin);
+}
+
+/** POST /api/polish — AI polish a draft message via Claude */
+async function handlePolish(request: Request, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  if (!env.ANTHROPIC_API_KEY) {
+    return jsonResponse({ error: 'AI polish not configured' }, 500, env, undefined, requestOrigin);
+  }
+
+  const body = await request.json() as {
+    draft: string;
+    tone?: string; // sweet, balanced, spicy
+  };
+
+  if (!body.draft || body.draft.trim().length < 5) {
+    return jsonResponse({ error: 'Draft must be at least 5 characters' }, 400, env, undefined, requestOrigin);
+  }
+
+  // Rate limit: 5 polishes per day
+  const today = new Date().toISOString().split('T')[0];
+  const polishCount = await env.DB.prepare(`
+    SELECT COUNT(*) as count FROM message_compositions
+    WHERE subscriber_id = ? AND DATE(created_at) = ? AND polished_text IS NOT NULL
+  `).bind(subscriberId, today).first();
+
+  if ((polishCount?.count as number) >= 5) {
+    return jsonResponse({ error: 'Daily polish limit reached (5 per day)' }, 429, env, undefined, requestOrigin);
+  }
+
+  // Get relationship profile for context
+  const profile = await env.DB.prepare(
+    'SELECT * FROM relationship_profiles WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  const tone = body.tone || 'sweet';
+  const draft = body.draft.replace(/[<>]/g, '').slice(0, 1000);
+
+  // Build system prompt with relationship context
+  let contextBlock = '';
+  if (profile) {
+    const parts: string[] = [];
+    if (profile.wife_name) parts.push(`Her name: ${profile.wife_name}`);
+    if (profile.nickname) parts.push(`Pet name: ${profile.nickname}`);
+    if (profile.years_together) parts.push(`Together: ${profile.years_together} years`);
+    if (profile.how_met) parts.push(`How they met: ${profile.how_met}`);
+    if (profile.inside_jokes) parts.push(`Inside jokes: ${profile.inside_jokes}`);
+    contextBlock = parts.join('\n');
+  }
+
+  const systemPrompt = `You are helping a husband send a genuine text message to his wife.
+
+${contextBlock ? `Context about their relationship:\n${contextBlock}\n` : ''}
+Rules:
+- Keep it SHORT (2-4 sentences max, this is a text message)
+- Sound like HIM, not like a poet or greeting card
+- Preserve every specific detail he mentioned
+- Don't add flowery language or cliches
+- Don't add emojis unless his draft has them
+- Match the tone: ${tone} (sweet = warm and tender, balanced = natural and easy, spicy = flirty and bold)
+- This should read like a real text from a real husband
+- Return ONLY the polished message, nothing else`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        system: systemPrompt,
+        messages: [
+          { role: 'user', content: `Polish this draft message:\n\n${draft}` }
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error('Claude API error:', err);
+      return jsonResponse({ error: 'AI polish failed' }, 500, env, undefined, requestOrigin);
+    }
+
+    const result = await response.json() as {
+      content: Array<{ type: string; text: string }>;
+    };
+
+    const polished = result.content?.[0]?.text?.trim() || draft;
+
+    return jsonResponse({
+      original: draft,
+      polished,
+      tone,
+    }, 200, env, undefined, requestOrigin);
+
+  } catch (err) {
+    console.error('Polish error:', err);
+    return jsonResponse({ error: 'AI polish failed' }, 500, env, undefined, requestOrigin);
+  }
+}
+
+/** POST /api/log — save a daily log entry */
+async function handleSaveLog(request: Request, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  // Check free tier
+  const subscriber = await env.DB.prepare(
+    'SELECT tier FROM subscribers WHERE id = ?'
+  ).bind(subscriberId).first();
+
+  if (subscriber?.tier === 'free') {
+    return jsonResponse({ error: 'Daily logs require a paid subscription' }, 403, env, undefined, requestOrigin);
+  }
+
+  const body = await request.json() as {
+    log_text: string;
+    tag?: string;
+  };
+
+  if (!body.log_text || body.log_text.trim().length < 2) {
+    return jsonResponse({ error: 'Log text is required' }, 400, env, undefined, requestOrigin);
+  }
+
+  const logText = body.log_text.replace(/[<>]/g, '').slice(0, 280);
+  const validTags = ['funny', 'sweet', 'tough', 'win', 'date_night'];
+  const tag = body.tag && validTags.includes(body.tag) ? body.tag : null;
+  const logDate = new Date().toISOString().split('T')[0];
+
+  await env.DB.prepare(`
+    INSERT INTO daily_logs (subscriber_id, log_text, tag, log_date)
+    VALUES (?, ?, ?, ?)
+  `).bind(subscriberId, logText, tag, logDate).run();
+
+  return jsonResponse({ success: true }, 200, env, undefined, requestOrigin);
+}
+
+/** GET /api/log — get recent log entries */
+async function handleGetLogs(subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const logs = await env.DB.prepare(`
+    SELECT id, log_text, tag, log_date, created_at FROM daily_logs
+    WHERE subscriber_id = ?
+    ORDER BY log_date DESC
+    LIMIT 30
+  `).bind(subscriberId).all();
+
+  return jsonResponse({ logs: logs.results || [] }, 200, env, undefined, requestOrigin);
+}
+
+/** GET /api/history — get message composition history */
+async function handleGetHistory(url: URL, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 50);
+  const offset = parseInt(url.searchParams.get('offset') || '0');
+
+  const compositions = await env.DB.prepare(`
+    SELECT mc.id, mc.raw_text, mc.polished_text, mc.final_text,
+           mc.tone_setting, mc.is_favorite, mc.created_at,
+           dp.personalized_nudge as prompt_nudge, pt.theme
+    FROM message_compositions mc
+    LEFT JOIN daily_prompts dp ON mc.daily_prompt_id = dp.id
+    LEFT JOIN prompt_templates pt ON dp.prompt_template_id = pt.id
+    WHERE mc.subscriber_id = ?
+    ORDER BY mc.created_at DESC
+    LIMIT ? OFFSET ?
+  `).bind(subscriberId, limit, offset).all();
+
+  // Get total count for pagination
+  const total = await env.DB.prepare(
+    'SELECT COUNT(*) as count FROM message_compositions WHERE subscriber_id = ?'
+  ).bind(subscriberId).first();
+
+  // Get streak (consecutive days with compositions)
+  const streak = await calculateStreak(subscriberId, env);
+
+  return jsonResponse({
+    compositions: compositions.results || [],
+    total: total?.count || 0,
+    streak,
+  }, 200, env, undefined, requestOrigin);
+}
+
+/** Calculate consecutive day streak for a subscriber */
+async function calculateStreak(subscriberId: string, env: Env): Promise<number> {
+  const days = await env.DB.prepare(`
+    SELECT DISTINCT DATE(created_at) as day FROM message_compositions
+    WHERE subscriber_id = ?
+    ORDER BY day DESC
+    LIMIT 365
+  `).bind(subscriberId).all();
+
+  if (!days.results || days.results.length === 0) return 0;
+
+  let streak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+  // Streak must include today or yesterday
+  const firstDay = days.results[0].day as string;
+  if (firstDay !== today && firstDay !== yesterday) return 0;
+
+  let expectedDate = new Date(firstDay);
+  for (const row of days.results) {
+    const dayStr = row.day as string;
+    const dayDate = new Date(dayStr);
+    const expected = expectedDate.toISOString().split('T')[0];
+    if (dayStr === expected) {
+      streak++;
+      expectedDate = new Date(expectedDate.getTime() - 24 * 60 * 60 * 1000);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+/** GET /api/favorites — get favorited compositions */
+async function handleGetFavorites(subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  const favorites = await env.DB.prepare(`
+    SELECT mc.id, mc.final_text, mc.tone_setting, mc.created_at,
+           dp.personalized_nudge as prompt_nudge, pt.theme
+    FROM message_compositions mc
+    LEFT JOIN daily_prompts dp ON mc.daily_prompt_id = dp.id
+    LEFT JOIN prompt_templates pt ON dp.prompt_template_id = pt.id
+    WHERE mc.subscriber_id = ? AND mc.is_favorite = 1
+    ORDER BY mc.created_at DESC
+  `).bind(subscriberId).all();
+
+  return jsonResponse({ favorites: favorites.results || [] }, 200, env, undefined, requestOrigin);
+}
+
+/** POST /api/favorites/:id — toggle favorite on a composition */
+async function handleToggleFavorite(compositionId: string, subscriberId: string, env: Env, requestOrigin: string): Promise<Response> {
+  // Verify ownership
+  const composition = await env.DB.prepare(
+    'SELECT id, is_favorite FROM message_compositions WHERE id = ? AND subscriber_id = ?'
+  ).bind(compositionId, subscriberId).first();
+
+  if (!composition) {
+    return jsonResponse({ error: 'Composition not found' }, 404, env, undefined, requestOrigin);
+  }
+
+  const newValue = composition.is_favorite ? 0 : 1;
+  await env.DB.prepare(
+    'UPDATE message_compositions SET is_favorite = ? WHERE id = ?'
+  ).bind(newValue, compositionId).run();
+
+  return jsonResponse({ is_favorite: newValue === 1 }, 200, env, undefined, requestOrigin);
+}
+
 /**
  * Scheduled handler - runs daily to generate messages for all active subscribers
  */
 async function handleScheduled(env: Env): Promise<void> {
-  console.log('Running scheduled message generation...');
+  console.log('Running v2 daily prompt generation...');
 
-  // Get today's date in MM-DD format for anniversary checking
   const today = new Date();
+  const todayDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
   const todayMMDD = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  // Get all subscribers who should receive messages today:
-  // - 'active' status (paid subscribers)
-  // - 'trial' status AND within 7-day trial period
+  // Get all eligible subscribers:
+  // - 'active' (paid) get daily prompts
+  // - 'trial' within 7 days get daily prompts
+  // - 'free' get weekly (Mondays only)
   const subscribers = await env.DB.prepare(`
-    SELECT id, email, phone, wife_name, nickname, theme, frequency, anniversary_date, wife_birthday, status, created_at
-    FROM subscribers
-    WHERE status = 'active'
-       OR (status = 'trial' AND created_at > datetime('now', '-7 days'))
+    SELECT s.id, s.email, s.phone, s.wife_name, s.nickname, s.theme, s.tier, s.status, s.onboarding_complete,
+           rp.wife_name as rp_wife_name, rp.nickname as rp_nickname, rp.anniversary_date, rp.wife_birthday,
+           rp.love_language, rp.how_met, rp.years_together
+    FROM subscribers s
+    LEFT JOIN relationship_profiles rp ON s.id = rp.subscriber_id
+    WHERE s.status = 'active'
+       OR (s.status = 'trial' AND s.created_at > datetime('now', '-7 days'))
+       OR s.tier = 'free'
   `).all();
 
   if (!subscribers.results || subscribers.results.length === 0) {
-    console.log('No eligible subscribers found (active or within trial period)');
+    console.log('No eligible subscribers found');
     return;
   }
 
@@ -1053,193 +1728,145 @@ async function handleScheduled(env: Env): Promise<void> {
 
   for (const subscriber of subscribers.results) {
     try {
-      // Check frequency - skip if not due
-      if (subscriber.frequency === 'weekly') {
-        // Send on Sundays only
-        if (today.getDay() !== 0) continue;
-      } else if (subscriber.frequency === 'bi-weekly') {
-        // Send on 1st and 15th of month
-        if (today.getDate() !== 1 && today.getDate() !== 15) continue;
+      // Free tier: only send on Mondays
+      if (subscriber.tier === 'free' && subscriber.status !== 'active' && subscriber.status !== 'trial') {
+        if (today.getDay() !== 1) continue;
       }
 
-      // Determine if today is a special occasion
-      let occasionType: string | null = null;
-      let messageTheme = subscriber.theme as string;
+      // Skip if onboarding not complete (no profile yet)
+      if (!subscriber.onboarding_complete) continue;
 
-      // Check for holidays first (applies to everyone)
-      occasionType = getHolidayForDate(today);
+      // Check if we already generated a prompt today
+      const existingPrompt = await env.DB.prepare(`
+        SELECT id FROM daily_prompts
+        WHERE subscriber_id = ? AND DATE(created_at) = ?
+      `).bind(subscriber.id, todayDate).first();
 
-      // Check anniversary (format: YYYY-MM-DD) - overrides holiday
+      if (existingPrompt) continue;
+
+      // Determine occasion
+      let occasion: string | null = getHolidayForDate(today);
+
       if (subscriber.anniversary_date) {
         const annivMMDD = (subscriber.anniversary_date as string).substring(5);
-        if (annivMMDD === todayMMDD) {
-          occasionType = 'anniversary';
-        }
+        if (annivMMDD === todayMMDD) occasion = 'anniversary';
       }
 
-      // Get message - either occasion-specific or random theme
-      let message;
-      if (occasionType) {
-        // Get occasion-specific message
-        message = await env.DB.prepare(`
-          SELECT id, theme, occasion, content
-          FROM messages
-          WHERE occasion = ?
-          ORDER BY RANDOM()
-          LIMIT 1
-        `).bind(occasionType).first();
+      if (subscriber.wife_birthday) {
+        if ((subscriber.wife_birthday as string) === todayMMDD) occasion = 'birthday';
       }
 
-      // If no occasion message or not a special day, get a random-themed message
-      if (!message) {
-        // Pick random theme for variety (user can always get their preferred in dashboard)
-        const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)];
-        messageTheme = randomTheme;
+      // Pick theme
+      let theme = (subscriber.theme as string) || 'romantic';
+      if (theme === 'random') {
+        theme = V2_THEMES[Math.floor(Math.random() * V2_THEMES.length)];
+      }
 
-        message = await env.DB.prepare(`
-          SELECT m.id, m.theme, m.occasion, m.content
-          FROM messages m
-          WHERE m.theme = ?
-            AND m.occasion IS NULL
-            AND m.id NOT IN (
-              SELECT message_id FROM subscriber_message_history WHERE subscriber_id = ?
+      // Get prompt template (occasion first, then theme with 90-day non-repeat)
+      let template;
+      if (occasion) {
+        template = await env.DB.prepare(`
+          SELECT * FROM prompt_templates WHERE occasion = ?
+          ORDER BY RANDOM() LIMIT 1
+        `).bind(occasion).first();
+      }
+
+      if (!template) {
+        const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        template = await env.DB.prepare(`
+          SELECT pt.* FROM prompt_templates pt
+          WHERE pt.theme = ? AND pt.occasion IS NULL
+            AND pt.id NOT IN (
+              SELECT prompt_template_id FROM daily_prompts
+              WHERE subscriber_id = ? AND DATE(created_at) > ?
             )
-          ORDER BY RANDOM()
-          LIMIT 1
-        `).bind(randomTheme, subscriber.id).first();
+          ORDER BY RANDOM() LIMIT 1
+        `).bind(theme, subscriber.id, ninetyDaysAgo).first();
 
-        // If all messages seen, reset history and get one
-        if (!message) {
-          await env.DB.prepare(
-            'DELETE FROM subscriber_message_history WHERE subscriber_id = ?'
-          ).bind(subscriber.id).run();
-
-          message = await env.DB.prepare(`
-            SELECT id, theme, occasion, content
-            FROM messages
-            WHERE theme = ? AND occasion IS NULL
-            ORDER BY RANDOM()
-            LIMIT 1
-          `).bind(randomTheme).first();
+        if (!template) {
+          template = await env.DB.prepare(`
+            SELECT * FROM prompt_templates WHERE theme = ? AND occasion IS NULL
+            ORDER BY RANDOM() LIMIT 1
+          `).bind(theme).first();
         }
       }
 
-      if (!message) {
-        console.log(`No message found for subscriber ${subscriber.id}`);
+      if (!template) {
+        console.log(`No prompt template found for subscriber ${subscriber.id}`);
         continue;
       }
 
-      // Use nickname in message content, fall back to wife's name
-      const nameForMessage = (subscriber.nickname || subscriber.wife_name) as string;
-      const content = (message.content as string).replace(/{wife_name}/g, nameForMessage);
+      // Build profile object for personalization
+      const profile = {
+        wife_name: subscriber.rp_wife_name || subscriber.wife_name,
+        nickname: subscriber.rp_nickname || subscriber.nickname,
+        years_together: subscriber.years_together,
+      };
 
-      // Record the message in send_log
-      const sendId = generateId();
+      const nudge = personalizeText(template.nudge_text as string, profile);
+      const starter = personalizeText(template.starter_text as string, profile);
+
+      // Store daily prompt
       await env.DB.prepare(`
-        INSERT INTO send_log (id, subscriber_id, message_id, status)
-        VALUES (?, ?, ?, 'pending')
-      `).bind(sendId, subscriber.id, message.id).run();
+        INSERT INTO daily_prompts (subscriber_id, prompt_template_id, personalized_nudge, personalized_starter, sent_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      `).bind(subscriber.id, template.id, nudge, starter).run();
 
-      // Record in history to prevent repeats
-      await env.DB.prepare(`
-        INSERT OR IGNORE INTO subscriber_message_history (subscriber_id, message_id)
-        VALUES (?, ?)
-      `).bind(subscriber.id, message.id).run();
+      // Send email notification
+      if (env.SENDGRID_API_KEY && env.SENDGRID_FROM_EMAIL) {
+        const wifeName = (profile.wife_name || subscriber.wife_name || 'her') as string;
+        const safeWifeName = escapeHtml(wifeName);
+        const safeNudge = escapeHtml(nudge);
+        const safeStarter = escapeHtml(starter);
+        const style = getOccasionEmailStyle(occasion);
 
-      // Send via Twilio SMS if configured
-      if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_PHONE_NUMBER) {
-        try {
-          const twilioResponse = await fetch(
-            `https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`,
-            {
-              method: 'POST',
-              headers: {
-                'Authorization': 'Basic ' + btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`),
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: new URLSearchParams({
-                To: `+1${subscriber.phone}`,
-                From: env.TWILIO_PHONE_NUMBER,
-                Body: `💕 Today's LoveNote for ${subscriber.wife_name}:\n\n${content}\n\n(Reply STOP to unsubscribe)`,
-              }).toString(),
-            }
-          );
-
-          const twilioResult = await twilioResponse.json() as { sid?: string; error_message?: string };
-
-          if (twilioResponse.ok && twilioResult.sid) {
-            await env.DB.prepare(`
-              UPDATE send_log SET status = 'sent', twilio_sid = ? WHERE id = ?
-            `).bind(twilioResult.sid, sendId).run();
-            console.log(`SMS sent to subscriber ${subscriber.id}`);
-          } else {
-            await env.DB.prepare(`
-              UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
-            `).bind(twilioResult.error_message || 'Unknown error', sendId).run();
-            console.error(`SMS failed for ${subscriber.id}:`, twilioResult.error_message);
-          }
-        } catch (twilioError) {
-          await env.DB.prepare(`
-            UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
-          `).bind(String(twilioError), sendId).run();
-          console.error(`Twilio error for ${subscriber.id}:`, twilioError);
-        }
-      }
-      // Fallback to SendGrid email if Twilio not configured
-      else if (env.SENDGRID_API_KEY && env.SENDGRID_FROM_EMAIL) {
-        const style = getOccasionEmailStyle(occasionType);
-        const subject = occasionType
-          ? `${style.emoji} ${style.greeting} A special love note for ${subscriber.wife_name}`
-          : `💕 Today's Love Note for ${subscriber.wife_name}`;
-
-        // Escape user content for HTML email
-        const safeWifeName = escapeHtml(subscriber.wife_name as string);
-        const safeContent = escapeHtml(content);
+        const subject = occasion
+          ? `${style.emoji} ${style.greeting} Today's prompt for ${wifeName}`
+          : `Your daily prompt is ready — say something to ${wifeName}`;
 
         const htmlContent = `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 20px;">
               <img src="https://sendmylove.app/sendmylove.app.png" alt="SendMyLove" style="height: 80px;">
-              ${occasionType ? `<h2 style="color: #e11d48; margin: 10px 0;">${style.emoji} ${escapeHtml(style.greeting)} ${style.emoji}</h2>` : ''}
+              ${occasion ? `<h2 style="color: #e11d48; margin: 10px 0;">${style.emoji} ${escapeHtml(style.greeting)} ${style.emoji}</h2>` : ''}
             </div>
-            <div style="background: ${style.gradient}; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
-              <p style="font-size: 18px; line-height: 1.6; color: #374151; margin: 0;">
-                ${safeContent}
+            <div style="background: #fef2f2; padding: 24px; border-radius: 12px; margin-bottom: 16px;">
+              <p style="font-size: 16px; color: #6b7280; margin: 0 0 8px 0; font-weight: 600;">Today's question:</p>
+              <p style="font-size: 20px; line-height: 1.5; color: #374151; margin: 0;">
+                ${safeNudge}
               </p>
             </div>
-            <p style="color: #6b7280; font-size: 14px; text-align: center;">
-              Copy this message and send it to ${safeWifeName} from your phone 📱
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; border: 2px dashed #d1d5db; margin-bottom: 20px;">
+              <p style="font-size: 14px; color: #9ca3af; margin: 0 0 8px 0;">Fill in the blank:</p>
+              <p style="font-size: 16px; line-height: 1.5; color: #374151; margin: 0; font-style: italic;">
+                "${safeStarter}"
+              </p>
+            </div>
+            <div style="text-align: center; margin-bottom: 20px;">
+              <a href="https://sendmylove.app/dashboard" style="display: inline-block; background: #e11d48; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
+                Complete & Send to ${safeWifeName}
+              </a>
+            </div>
+            <p style="color: #9ca3af; font-size: 13px; text-align: center;">
+              Takes 30 seconds. She'll love it.
             </p>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
             <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-              <a href="https://sendmylove.app/dashboard" style="color: #e11d48;">View Dashboard</a> |
+              <a href="https://sendmylove.app/dashboard" style="color: #e11d48;">Dashboard</a> |
               <a href="mailto:support@sendmylove.app" style="color: #e11d48;">Unsubscribe</a>
             </p>
           </div>
         `;
 
-        const textContent = `${style.emoji} SendMyLove${occasionType ? ` - ${style.greeting}` : ''}\n\n${content}\n\nCopy this message and send it to ${subscriber.wife_name} from your phone.\n\nView Dashboard: https://sendmylove.app/dashboard`;
+        const textContent = `SendMyLove${occasion ? ` - ${style.greeting}` : ''}\n\nToday's question: ${nudge}\n\nFill in the blank:\n"${starter}"\n\nComplete it here: https://sendmylove.app/dashboard\n\nTakes 30 seconds. She'll love it.`;
 
         const emailResult = await sendEmail(env, subscriber.email as string, subject, htmlContent, textContent);
 
         if (emailResult.success) {
-          await env.DB.prepare(`
-            UPDATE send_log SET status = 'sent' WHERE id = ?
-          `).bind(sendId).run();
-          console.log(`Email sent to subscriber ${subscriber.id}`);
+          console.log(`Prompt email sent to subscriber ${subscriber.id}`);
         } else {
-          await env.DB.prepare(`
-            UPDATE send_log SET status = 'failed', error_message = ? WHERE id = ?
-          `).bind(emailResult.error || 'Email failed', sendId).run();
           console.error(`Email failed for ${subscriber.id}:`, emailResult.error);
         }
-      }
-      // Neither configured - mark as ready for manual send
-      else {
-        await env.DB.prepare(`
-          UPDATE send_log SET status = 'ready' WHERE id = ?
-        `).bind(sendId).run();
-        console.log(`Message queued for subscriber ${subscriber.id} (no SMS/email configured)`);
       }
 
     } catch (err) {
@@ -1247,7 +1874,7 @@ async function handleScheduled(env: Env): Promise<void> {
     }
   }
 
-  console.log('Scheduled message generation complete');
+  console.log('Scheduled prompt generation complete');
 }
 
 /**

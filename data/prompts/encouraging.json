@@ -1,0 +1,77 @@
+[
+  {
+    "theme": "encouraging",
+    "nudge": "What's {wife_name} working on or worried about right now?",
+    "starter": "I know ___ has been on your mind. I just want you to know ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's a strength of {wife_name}'s that she doesn't see in herself?",
+    "starter": "You're so much ___ than you give yourself credit for"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What goal or dream is {wife_name} chasing right now?",
+    "starter": "I believe in what you're doing with ___. You're going to ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "When has {wife_name} surprised herself by doing something hard?",
+    "starter": "Remember when you didn't think you could ___ and then you ___? That's who you are."
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's something {wife_name} is being too hard on herself about?",
+    "starter": "Hey, stop beating yourself up about ___. You're doing better than you think because ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "If {wife_name} is having a tough week, what does she need to hear?",
+    "starter": "I know this week has been ___. But you're handling it and I'm ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's something {wife_name} has gotten noticeably better at over time?",
+    "starter": "I've watched you grow so much with ___. Seriously impressive."
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What decision is {wife_name} overthinking right now?",
+    "starter": "Whatever you decide about ___, I'm behind you 100%. You have good instincts."
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "When did {wife_name} last doubt herself and you wished you'd said something?",
+    "starter": "I should've said this sooner: ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's a fear {wife_name} has that you want to help her with?",
+    "starter": "I know ___ scares you. But you won't have to face it alone because ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What did {wife_name} accomplish recently that deserved more celebration?",
+    "starter": "We didn't make a big enough deal about you ___. That was huge."
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's something coming up that {wife_name} is nervous about?",
+    "starter": "About ___: you're going to be great. Here's why: ___"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What role does {wife_name} play (mom, professional, friend) where she's killing it?",
+    "starter": "The way you ___ as a ___ is something I really admire"
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "What's the hardest thing {wife_name} has ever done?",
+    "starter": "You got through ___. You can get through anything. And I'll be right here."
+  },
+  {
+    "theme": "encouraging",
+    "nudge": "If you could give {wife_name} one piece of confidence today, what would it be?",
+    "starter": "Just a reminder: you are ___ and don't let anyone (including yourself) tell you otherwise"
+  }
+]

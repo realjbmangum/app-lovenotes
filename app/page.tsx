@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -22,11 +22,21 @@ import {
   X,
   Copy,
   Pencil,
+  Send,
 } from "lucide-react"
 import { submitSignup, formatPhoneNumber, validatePhoneNumber, validateEmail } from "@/lib/api"
 import Link from "next/link"
+// Helper: returns animation class after mount, opacity-0 before
+function useAnimReady() {
+  const [ready, setReady] = useState(false)
+  useEffect(() => { setReady(true) }, [])
+  return (cls: string, delay?: string) =>
+    ready ? `${cls}${delay ? ` ${delay}` : ''}` : 'opacity-0'
+}
 
 export default function LandingPage() {
+  const a = useAnimReady()
+
   const [formData, setFormData] = useState({
     email: "",
     phoneNumber: "",
@@ -146,52 +156,79 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="py-16 md:py-24 px-4">
-        <div className="container mx-auto max-w-5xl text-center">
-          <div className="flex justify-center mb-8">
+      <section className="relative py-16 md:py-24 px-4 overflow-hidden">
+        {/* Animated background blobs — larger + more visible */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-20 -left-20 w-96 h-96 bg-rose-300/50 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-purple-300/50 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
+          <div className="absolute -bottom-20 left-1/3 w-96 h-96 bg-orange-200/40 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+        </div>
+
+        {/* Floating decorative elements — hidden on mobile to avoid overlap */}
+        <div className="absolute inset-0 -z-10 pointer-events-none hidden md:block" aria-hidden="true">
+          <div className="absolute top-[15%] left-[8%] animate-float opacity-20">
+            <Heart className="h-8 w-8 text-rose-400 fill-rose-400" />
+          </div>
+          <div className="absolute top-[25%] right-[10%] animate-float-reverse opacity-15">
+            <MessageCircle className="h-10 w-10 text-purple-400" />
+          </div>
+          <div className="absolute bottom-[30%] right-[7%] animate-float-slow opacity-15">
+            <Sparkles className="h-9 w-9 text-amber-400" />
+          </div>
+        </div>
+
+        <div className="container mx-auto max-w-5xl text-center relative">
+          {/* Logo + animated message bubble */}
+          <div className={`flex justify-center items-center mb-8 gap-4 ${a('animate-scale-in')}`}>
             <img src="/sendmylove.app.png" alt="SendMyLove" className="h-32 md:h-44 lg:h-52" />
+            <div className="relative animate-float">
+              <div className="bg-gradient-to-br from-rose-500 to-purple-600 rounded-2xl rounded-bl-sm px-4 py-3 shadow-lg shadow-rose-500/20">
+                <Heart className="h-6 w-6 md:h-8 md:w-8 text-white fill-white animate-pulse-heart" />
+              </div>
+              <Sparkles className="absolute -top-2 -right-2 h-4 w-4 text-amber-400 animate-bounce-in" />
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-            You know what to feel.{" "}
-            <span className="bg-gradient-to-r from-rose-500 to-purple-600 bg-clip-text text-transparent">
+          <h1 className={`text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 ${a('animate-scale-in', 'delay-1')}`}>
+            You know what you feel.<br />
+            <span className="bg-gradient-to-r from-rose-500 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient-text">
               We help you say it.
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto">
+          <p className={`text-xl md:text-2xl text-gray-600 leading-relaxed mb-8 max-w-3xl mx-auto ${a('animate-fade-in-up', 'delay-2')}`}>
             Daily prompts that help you write real, personal messages to your wife.
             Not AI slop. Not greeting cards. Your words, your feelings, said better.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-8 ${a('animate-fade-in-up', 'delay-3')}`}>
             <Button
               size="lg"
               onClick={() => scrollToSection("signup")}
-              className="bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-lg px-10 py-7 group"
+              className="bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-lg px-10 py-7 group hover:scale-105 transition-all animate-glow-pulse"
             >
               Start Free Trial — $5/month
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 mb-16">
+          <div className={`flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 mb-16 ${a('animate-fade-in-up', 'delay-4')}`}>
             <div className="flex items-center"><Check className="h-5 w-5 text-green-500 mr-2" />7-day free trial</div>
             <div className="flex items-center"><Check className="h-5 w-5 text-green-500 mr-2" />Cancel anytime</div>
             <div className="flex items-center"><Check className="h-5 w-5 text-green-500 mr-2" />She never needs an account</div>
           </div>
 
           {/* Interactive Prompt Preview */}
-          <div className="max-w-2xl mx-auto">
+          <div className={`max-w-2xl mx-auto ${a('animate-fade-in-up', 'delay-5')}`}>
             <div className="flex gap-2 justify-center mb-4">
               {promptExamples.map((ex, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveExample(i)}
-                  className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                  className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
                     activeExample === i
-                      ? 'bg-rose-500 text-white'
-                      : 'bg-white text-gray-600 hover:bg-rose-50'
+                      ? 'bg-rose-500 text-white scale-110 shadow-lg shadow-rose-500/25'
+                      : 'bg-white text-gray-600 hover:bg-rose-50 hover:scale-105'
                   }`}
                 >
                   {ex.theme}
@@ -199,10 +236,10 @@ export default function LandingPage() {
               ))}
             </div>
 
-            <Card className="border-rose-200 shadow-xl text-left">
+            <Card className="border-rose-200 shadow-xl text-left overflow-hidden">
               <CardContent className="p-6 space-y-4">
-                {/* Nudge */}
-                <div>
+                {/* Nudge — keyed for re-animation on tab switch */}
+                <div key={`nudge-${activeExample}`} className="animate-fade-in">
                   <Badge className="bg-rose-100 text-rose-700 mb-3">{promptExamples[activeExample].theme}</Badge>
                   <p className="text-gray-700 text-lg leading-relaxed">
                     {promptExamples[activeExample].nudge}
@@ -210,7 +247,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Starter → Filled */}
-                <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+                <div key={`filled-${activeExample}`} className="bg-gray-50 rounded-xl p-4 space-y-3 animate-fade-in-up">
                   <div className="flex items-center gap-2 text-xs text-gray-400">
                     <Pencil className="h-3 w-3" />
                     <span>You fill in the blank:</span>
@@ -225,7 +262,7 @@ export default function LandingPage() {
 
                 {/* Copy button mock */}
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-rose-500 text-white rounded-lg py-3 text-center text-sm font-medium flex items-center justify-center gap-2">
+                  <div className="flex-1 bg-rose-500 text-white rounded-lg py-3 text-center text-sm font-medium flex items-center justify-center gap-2 hover:scale-[1.02] hover:shadow-xl transition-all cursor-pointer">
                     <Copy className="h-4 w-4" />
                     Copy & Send from your phone
                   </div>
@@ -243,15 +280,15 @@ export default function LandingPage() {
       {/* How It Works */}
       <section id="how-it-works" className="py-20 px-4 bg-white/50">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 ${a('animate-fade-in-up')}`}>
             <h2 className="text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-xl text-gray-600">Three steps. Two minutes. One happy wife.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-rose-100 hover:shadow-lg transition-shadow">
+            <Card className={`border-rose-100 hover:shadow-lg transition-shadow ${a('animate-fade-in-up', 'delay-1')}`}>
               <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+                <div className={`w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold ${a('animate-bounce-in', 'delay-2')}`}>1</div>
                 <CardTitle className="text-xl">We ask a question</CardTitle>
               </CardHeader>
               <CardContent>
@@ -261,9 +298,9 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-rose-100 hover:shadow-lg transition-shadow">
+            <Card className={`border-rose-100 hover:shadow-lg transition-shadow ${a('animate-fade-in-up', 'delay-2')}`}>
               <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+                <div className={`w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold ${a('animate-bounce-in', 'delay-3')}`}>2</div>
                 <CardTitle className="text-xl">You fill in the blank</CardTitle>
               </CardHeader>
               <CardContent>
@@ -273,9 +310,9 @@ export default function LandingPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-rose-100 hover:shadow-lg transition-shadow">
+            <Card className={`border-rose-100 hover:shadow-lg transition-shadow ${a('animate-fade-in-up', 'delay-3')}`}>
               <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+                <div className={`w-16 h-16 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold ${a('animate-bounce-in', 'delay-4')}`}>3</div>
                 <CardTitle className="text-xl">Copy, send, done</CardTitle>
               </CardHeader>
               <CardContent>
@@ -297,13 +334,13 @@ export default function LandingPage() {
       {/* Why this works */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 ${a('animate-fade-in-up')}`}>
             <h2 className="text-4xl font-bold mb-4">Why this actually works</h2>
             <p className="text-xl text-gray-600">Unlike every other "relationship app" out there</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+            <div className={`space-y-6 ${a('animate-slide-in-left', 'delay-1')}`}>
               <h3 className="text-lg font-semibold text-gray-900">Other apps</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3 text-gray-500">
@@ -325,7 +362,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className={`space-y-6 ${a('animate-slide-in-right', 'delay-2')}`}>
               <h3 className="text-lg font-semibold text-gray-900">SendMyLove</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -353,13 +390,13 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="pricing" className="py-20 px-4 bg-white/50">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 ${a('animate-fade-in-up')}`}>
             <h2 className="text-4xl font-bold mb-4">Less than a coffee. More than a card.</h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Free */}
-            <Card className="border-gray-200">
+            <Card className={`border-gray-200 ${a('animate-fade-in-up', 'delay-1')}`}>
               <CardHeader className="text-center">
                 <CardTitle className="text-xl">Free</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">$0</div>
@@ -381,8 +418,8 @@ export default function LandingPage() {
             </Card>
 
             {/* Pro */}
-            <Card className="border-2 border-rose-200 shadow-xl relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <Card className={`border-2 border-rose-200 shadow-xl relative ${a('animate-fade-in-up', 'delay-2')}`}>
+              <div className={`absolute -top-3 left-1/2 -translate-x-1/2 ${a('animate-bounce-in', 'delay-4')}`}>
                 <Badge className="bg-rose-500 text-white">Most Popular</Badge>
               </div>
               <CardHeader className="text-center">
@@ -412,7 +449,7 @@ export default function LandingPage() {
       {/* FAQ */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 ${a('animate-fade-in-up')}`}>
             <h2 className="text-4xl font-bold mb-4">Questions</h2>
           </div>
 
@@ -465,12 +502,12 @@ export default function LandingPage() {
       {/* Signup Form */}
       <section id="signup" className="py-20 px-4 bg-white/50">
         <div className="container mx-auto max-w-lg">
-          <div className="text-center mb-8">
+          <div className={`text-center mb-8 ${a('animate-fade-in-up')}`}>
             <h2 className="text-3xl font-bold mb-3">Start in 60 seconds</h2>
             <p className="text-gray-600">Sign up, tell us about her, get your first prompt.</p>
           </div>
 
-          <Card className="border-rose-200 shadow-xl">
+          <Card className={`border-rose-200 shadow-xl ${a('animate-fade-in-up', 'delay-1')}`}>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-5">
                 {submitError && (
@@ -521,7 +558,7 @@ export default function LandingPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700"
+                  className="w-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 hover:scale-[1.02] hover:shadow-xl transition-all"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Setting up..." : "Start 7-Day Free Trial"}

@@ -74,10 +74,19 @@ const THEME_COLORS: Record<string, string> = {
   spicy: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
 }
 
+// Helper: returns animation class after mount, opacity-0 before
+function useAnimReady() {
+  const [ready, setReady] = useState(false)
+  useEffect(() => { setReady(true) }, [])
+  return (cls: string, delay?: string) =>
+    ready ? `${cls}${delay ? ` ${delay}` : ''}` : 'opacity-0'
+}
+
 // --- Dashboard ---
 
 function DashboardContent() {
   const router = useRouter()
+  const a = useAnimReady()
 
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [prompt, setPrompt] = useState<Prompt | null>(null)
@@ -339,11 +348,11 @@ function DashboardContent() {
         {/* Today's Prompt */}
         {prompt && !freeLimitHit && (
           <>
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className={`bg-slate-800 border-slate-700 ${a('animate-fade-in-up')}`}>
               <CardContent className="p-5 sm:p-6">
                 {/* Theme badge */}
                 <div className="flex items-center justify-between mb-4">
-                  <Badge className={THEME_COLORS[prompt.theme] || THEME_COLORS.romantic}>
+                  <Badge className={`${THEME_COLORS[prompt.theme] || THEME_COLORS.romantic} ${a('animate-bounce-in', 'delay-1')}`}>
                     {prompt.theme}
                   </Badge>
                   {prompt.completed ? (
@@ -401,7 +410,7 @@ function DashboardContent() {
                     onClick={handlePolish}
                     disabled={polishLoading || draftText.length < 10}
                     variant="outline"
-                    className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+                    className={`border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white ${polishLoading ? 'animate-shimmer' : ''}`}
                   >
                     {polishLoading ? (
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -425,7 +434,7 @@ function DashboardContent() {
 
             {/* Polished version (if available) */}
             {polishedText && (
-              <Card className="bg-slate-800 border-rose-500/20">
+              <Card className={`bg-slate-800 border-rose-500/20 ${a('animate-fade-in-up')}`}>
                 <CardContent className="p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="h-4 w-4 text-rose-400" />
@@ -452,10 +461,10 @@ function DashboardContent() {
             <Button
               onClick={handleCopy}
               disabled={!draftText.trim() || draftText === prompt.starter}
-              className={`w-full py-6 text-lg ${
+              className={`w-full py-6 text-lg transition-all ${
                 copied
-                  ? 'bg-green-600 hover:bg-green-600'
-                  : 'bg-rose-500 hover:bg-rose-600'
+                  ? 'bg-green-600 hover:bg-green-600 animate-bounce-in'
+                  : 'bg-rose-500 hover:bg-rose-600 hover:scale-[1.02] hover:shadow-xl'
               }`}
             >
               {copied ? (
@@ -501,7 +510,7 @@ function DashboardContent() {
             </button>
 
             {showQuickLog && (
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 space-y-2 animate-fade-in-up" style={{ animationDuration: '0.3s' }}>
                 <p className="text-xs text-slate-500">
                   Quick note about your day — helps tomorrow's prompt feel personal.
                 </p>
@@ -547,8 +556,8 @@ function DashboardContent() {
             {history.length === 0 ? (
               <p className="text-center text-slate-500 text-sm py-4">No messages yet. Send your first one above!</p>
             ) : (
-              history.map((comp) => (
-                <Card key={comp.id} className="bg-slate-800/50 border-slate-700/50">
+              history.map((comp, idx) => (
+                <Card key={comp.id} className="bg-slate-800/50 border-slate-700/50 animate-fade-in-up" style={{ animationDelay: `${idx * 0.08}s` }}>
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
@@ -579,7 +588,7 @@ function DashboardContent() {
 
         {/* Error toast */}
         {error && subscriber && (
-          <div className="fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-red-900/90 border border-red-700 text-red-200 rounded-lg p-3 text-sm">
+          <div className="fixed bottom-4 left-4 right-4 max-w-md mx-auto bg-red-900/90 border border-red-700 text-red-200 rounded-lg p-3 text-sm animate-slide-in-up">
             {error}
             <button onClick={() => setError(null)} className="ml-2 text-red-400 hover:text-red-200">dismiss</button>
           </div>

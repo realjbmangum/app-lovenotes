@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -123,7 +123,7 @@ function OnboardingContent() {
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${
+              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
                 i < step ? 'bg-rose-500' : 'bg-slate-700'
               }`}
             />
@@ -134,7 +134,7 @@ function OnboardingContent() {
           <CardContent className="p-6 sm:p-8">
             {/* Step 1: The basics */}
             {step === 1 && (
-              <div className="space-y-6">
+              <div key="step-1" className="space-y-6 animate-fade-in-up">
                 <div className="text-center mb-2">
                   <h2 className="text-2xl font-bold text-white mb-2">Let's get to know your relationship</h2>
                   <p className="text-slate-400">This helps us write prompts that actually feel like you.</p>
@@ -171,9 +171,9 @@ function OnboardingContent() {
                         <button
                           key={opt.value}
                           onClick={() => setYearsTogether(opt.value)}
-                          className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                          className={`px-3 py-2 rounded-lg text-sm transition-all ${
                             yearsTogether === opt.value
-                              ? 'bg-rose-500 text-white'
+                              ? 'bg-rose-500 text-white animate-pop'
                               : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                           }`}
                         >
@@ -188,7 +188,7 @@ function OnboardingContent() {
 
             {/* Step 2: What makes her special */}
             {step === 2 && (
-              <div className="space-y-6">
+              <div key="step-2" className="space-y-6 animate-fade-in-up">
                 <div className="text-center mb-2">
                   <h2 className="text-2xl font-bold text-white mb-2">What makes her special?</h2>
                   <p className="text-slate-400">A sentence or two is plenty. This feeds your daily prompts.</p>
@@ -239,7 +239,7 @@ function OnboardingContent() {
 
             {/* Step 3: Her favorites (optional) */}
             {step === 3 && (
-              <div className="space-y-6">
+              <div key="step-3" className="space-y-6 animate-fade-in-up">
                 <div className="text-center mb-2">
                   <h2 className="text-2xl font-bold text-white mb-2">Her favorites</h2>
                   <p className="text-slate-400">All optional — skip anything you're not sure about.</p>
@@ -253,9 +253,9 @@ function OnboardingContent() {
                         <button
                           key={lang.value}
                           onClick={() => setLoveLanguage(lang.value)}
-                          className={`px-4 py-3 rounded-lg text-sm text-left transition-colors ${
+                          className={`px-4 py-3 rounded-lg text-sm text-left transition-all ${
                             loveLanguage === lang.value
-                              ? 'bg-rose-500 text-white'
+                              ? 'bg-rose-500 text-white animate-pop'
                               : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                           }`}
                         >
@@ -310,7 +310,7 @@ function OnboardingContent() {
 
             {/* Step 4: Pick your vibe */}
             {step === 4 && (
-              <div className="space-y-6">
+              <div key="step-4" className="space-y-6 animate-fade-in-up">
                 <div className="text-center mb-2">
                   <Sparkles className="h-8 w-8 text-rose-400 mx-auto mb-2" />
                   <h2 className="text-2xl font-bold text-white mb-2">Pick your vibe</h2>
@@ -322,9 +322,9 @@ function OnboardingContent() {
                     <button
                       key={theme.value}
                       onClick={() => setThemePreference(theme.value)}
-                      className={`px-4 py-3 rounded-lg text-left transition-colors ${
+                      className={`px-4 py-3 rounded-lg text-left transition-all ${
                         themePreference === theme.value
-                          ? 'bg-rose-500 text-white'
+                          ? 'bg-rose-500 text-white animate-pop'
                           : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                       }`}
                     >
@@ -388,7 +388,7 @@ function OnboardingContent() {
                   <Button
                     onClick={handleSave}
                     disabled={saving}
-                    className="bg-rose-500 hover:bg-rose-600"
+                    className="bg-rose-500 hover:bg-rose-600 animate-pulse"
                   >
                     {saving ? 'Saving...' : "Let's go"}
                     {!saving && <Heart className="h-4 w-4 ml-1" />}
